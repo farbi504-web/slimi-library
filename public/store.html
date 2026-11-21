@@ -1,0 +1,1003 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>مكتبة سليمي</title>
+<link rel="icon" type="image/png" href="/brand/mark.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Tajawal:wght@500;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
+<style id="css">
+/* Slimi Bookstore: editorial identity. Paper, ink navy, one gold rule. No glass, no gradients, no glow.
+   Type: El Messiri (display) + IBM Plex Sans Arabic (text). Layout: hairlines, asymmetric grids, large type. */
+:root{
+  --paper:#FAF7EE;--surface:#FFFFFF;--ink:#0E2257;--ink-2:#1F4FD8;--muted:#515C7B;--rule:#E6E1D3;--rule-2:#D3CEBF;
+  --gold:#FFD21F;--gold-ink:#7A5C00;--ok:#17794A;--warn:#8F5600;--danger:#B42318;--scrim:rgba(15,27,60,.55);
+  --bg:var(--paper);--field:var(--surface);--edge:var(--rule);--edge-lo:var(--rule);--glass-hi:var(--surface);
+  --link:var(--ink);--blue:var(--ink);--yellow:var(--gold);--red:var(--danger);--accent-ink:var(--ink);
+  --c-school:var(--ink-2);--c-office:var(--ink-2);--c-apps:var(--ink-2);--c-games:var(--ink-2);--c-services:var(--ink-2);
+  --font-display:'El Messiri','IBM Plex Sans Arabic',system-ui,sans-serif;
+  --font-body:'IBM Plex Sans Arabic',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0A1433;--surface:#0E2257;--ink:#EEF1F5;--ink-2:#AEC0F5;--muted:#9AA9BD;--rule:#1E2F6B;--rule-2:#2E4590;
+  --gold:#FFD21F;--gold-ink:#FFE066;--ok:#4FC28A;--warn:#F0B14A;--danger:#FF8A80;--scrim:rgba(0,0,0,.65);color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0A1433;--surface:#0E2257;--ink:#EEF1F5;--ink-2:#AEC0F5;--muted:#9AA9BD;--rule:#1E2F6B;--rule-2:#2E4590;
+  --gold:#FFD21F;--gold-ink:#FFE066;--ok:#4FC28A;--warn:#F0B14A;--danger:#FF8A80;--scrim:rgba(0,0,0,.65);color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.75 var(--font-body);
+  padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));padding-block:0 0;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--paper);z-index:60}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+::selection{background:var(--gold);color:#fff}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+h1,h2,h3,h4{font-family:var(--font-display);margin:0;text-wrap:balance}
+html[lang="fr"] h1,html[lang="fr"] h2{letter-spacing:-.01em}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1240px;margin-inline:auto}
+#nav{display:contents}
+/* header */
+.util{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;padding:9px 0;font-size:13px;color:var(--muted);border-bottom:1px solid var(--rule)}
+.util a{color:var(--ink);text-decoration:none;font-weight:600}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;display:flex;align-items:center;gap:10px;padding:12px 0;background:var(--paper);border-bottom:1px solid var(--rule)}
+.nav .sp{flex:1}
+.nl{display:flex;gap:2px;margin-inline-start:18px}
+.nl a{position:relative;text-decoration:none;padding:8px 11px;font-weight:500;font-size:14.5px;color:var(--muted);white-space:nowrap;transition:color .2s}
+.nl a::after{content:"";position:absolute;inset-inline:11px;bottom:2px;height:2px;background:var(--gold);transform:scaleX(0);transform-origin:center;transition:transform .25s}
+.nl a:hover{color:var(--ink)}.nl a:hover::after,.nl a[aria-current="page"]::after{transform:scaleX(1)}
+.nl a[aria-current="page"]{color:var(--ink)}
+.nsearch{display:flex;align-items:center;border-bottom:1px solid var(--rule-2);min-width:0;transition:border-color .2s}
+.nsearch:focus-within{border-color:var(--ink)}
+.nsearch input{border:0;background:transparent;padding:8px 6px;width:170px;font-size:14px;outline:none;min-width:0;transition:width .3s}
+.nsearch input:focus{width:230px}
+.nsearch button{border:0;background:transparent;padding:8px 6px;cursor:pointer;display:grid;place-items:center;color:var(--ink)}
+.ib{position:relative;min-width:42px;height:42px;border-radius:4px;border:0;background:transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 10px;font-weight:500;font-size:14px;transition:background .2s}
+.ib:hover{background:color-mix(in srgb,var(--ink) 7%,transparent)}
+.ib.acc{text-decoration:none}.ib.acc .an{max-width:84px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cbadge{position:absolute;inset-block-start:3px;inset-inline-end:2px;min-width:18px;height:18px;border-radius:9px;background:var(--ink);color:var(--paper);font-size:11px;font-weight:600;display:grid;place-items:center;padding:0 5px}
+.cbadge[hidden]{display:none}
+.logo{display:inline-flex;align-items:center;gap:10px;text-decoration:none}
+.logo .mark{width:40px;height:40px;display:grid;place-items:center;flex:none;overflow:hidden;background:var(--ink);color:var(--paper);border-radius:4px}
+.logo .mark svg{width:60%;height:60%}.logo .mark img{width:100%;height:100%;object-fit:contain;background:#fff}
+.logo .lt{display:grid;line-height:1.05}.logo .lt small{font-size:12px;color:var(--muted)}.logo .lt b{font:700 20px/1.1 var(--font-display)}
+.logo.brandimg img{height:50px;width:auto;max-width:170px;object-fit:contain;display:block}
+.logo.brandimg.big img{height:96px;max-width:220px}
+:root[data-theme="dark"] .logo.brandimg img{background:#fff;border-radius:6px;padding:3px 8px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .logo.brandimg img{background:#fff;border-radius:6px;padding:3px 8px}}
+/* buttons */
+.btn{min-height:46px;padding:0 24px;border-radius:4px;border:1px solid var(--ink);background:transparent;cursor:pointer;font-weight:600;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;color:var(--ink);transition:background .2s,color .2s,border-color .2s,transform .12s}
+.btn:hover{background:var(--ink);color:var(--paper)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn.primary:hover{background:var(--ink-2);border-color:var(--ink-2);color:#fff}
+.btn.link{border:0;padding:0;min-height:0;background:none;color:var(--ink);text-decoration:underline;text-decoration-color:var(--gold);text-decoration-thickness:2px;text-underline-offset:7px}
+.btn.link:hover{background:none;color:var(--ink);text-decoration-thickness:3px}
+.btn.sm{min-height:36px;padding:0 14px;font-size:14px}
+.btn.ghost{border-color:transparent}
+.btn.danger{color:var(--danger);border-color:var(--danger)}.btn.danger:hover{background:var(--danger);color:#fff}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.block{width:100%}
+.cta{display:flex;gap:22px;flex-wrap:wrap;align-items:center}
+/* hero */
+.hero{position:relative;isolation:isolate;display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,6vw,88px);align-items:center;padding-block:clamp(36px,7vw,96px) clamp(36px,6vw,72px)}
+.hero h1{font:700 clamp(42px,7.4vw,96px)/1.05 var(--font-display);letter-spacing:-.015em}
+.hero p{margin:24px 0 0;max-width:44ch;color:var(--muted);font-size:clamp(16px,1.9vw,19px)}
+.hero .cta{margin-top:32px}
+.hero-f{margin:0;position:relative}
+.hero-f::before{content:"";position:absolute;z-index:-1;inset-block-start:14px;inset-block-end:-14px;inset-inline-start:-14px;inset-inline-end:14px;border:1px solid var(--gold)}
+.hero-f img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;border-radius:2px;background:color-mix(in srgb,var(--ink) 8%,var(--surface))}
+.hero-f figcaption{margin-top:26px;padding-top:10px;border-top:1px solid var(--rule);font-size:13px;color:var(--muted)}
+@media (max-width:820px){.hero{grid-template-columns:1fr}.hero-f img{aspect-ratio:4/3}.hero-f::before{inset-inline-start:-8px;inset-inline-end:8px;inset-block-start:8px;inset-block-end:-8px}}
+@media (prefers-reduced-motion:no-preference){
+  .hero h1,.hero p,.hero .cta{animation:up .8s cubic-bezier(.2,.7,.2,1) both}
+  .hero p{animation-delay:.12s}.hero .cta{animation-delay:.24s}
+  .hero-f img{animation:reveal 1.1s .08s cubic-bezier(.2,.7,.2,1) both}
+  #page>*{animation:pg .45s ease both}
+  @keyframes up{from{opacity:0;transform:translateY(20px)}}
+  @keyframes reveal{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0)}}
+  @keyframes pg{from{opacity:0;transform:translateY(8px)}}}
+/* trust: plain columns */
+.trust{display:grid;grid-template-columns:repeat(4,1fr);border-block:1px solid var(--rule)}
+.trust>div{padding:22px 24px;border-inline-start:1px solid var(--rule)}.trust>div:first-child{border-inline-start:0;padding-inline-start:0}
+.trust .ti{display:none}.trust b{display:block;font:600 18px/1.3 var(--font-display)}.trust .s{color:var(--muted);font-size:14px}
+@media (max-width:760px){.trust{grid-template-columns:1fr 1fr}.trust>div:nth-child(odd){border-inline-start:0;padding-inline-start:0}.trust>div:nth-child(n+3){border-top:1px solid var(--rule)}}
+/* sections */
+.sec{margin-top:clamp(56px,9vw,120px)}
+.sh{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid var(--rule)}
+.sh h2{font:600 clamp(26px,3.6vw,42px)/1.2 var(--font-display)}
+.sh p{margin:4px 0 0;color:var(--muted)}
+.sh a{font-weight:600;white-space:nowrap;text-decoration:underline;text-decoration-color:var(--gold);text-decoration-thickness:2px;text-underline-offset:6px}
+/* services as an index */
+.svcs{border-top:1px solid var(--ink)}
+.svc{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.4fr) auto;gap:6px 28px;align-items:baseline;padding:28px 6px;border-bottom:1px solid var(--rule);text-decoration:none;color:var(--ink);transition:background .25s,padding .25s}
+.svc b{font:600 clamp(24px,3.2vw,40px)/1.2 var(--font-display)}
+.svc .s{color:var(--muted)}
+.svc .go{font-weight:600;white-space:nowrap}
+.svc .go::after{content:"\2190";display:inline-block;margin-inline-start:10px;transition:transform .25s}
+[dir=ltr] .svc .go::after{content:"\2192"}
+.svc:hover{background:var(--surface);padding-inline:20px}
+.svc:hover .go::after{transform:translateX(-8px)}[dir=ltr] .svc:hover .go::after{transform:translateX(8px)}
+@media (max-width:720px){.svc{grid-template-columns:1fr auto;padding-block:22px}.svc .s{grid-column:1/-1;order:3}}
+/* products */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr));gap:40px 22px}
+#hgrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+#hgrid .pc:first-child{grid-column:span 2;grid-row:span 2}#hgrid .pc:nth-child(n+6){display:none}
+#hgrid .pc:first-child .tile{aspect-ratio:auto;height:100%;min-height:380px}
+@media (max-width:900px){#hgrid{grid-template-columns:repeat(2,minmax(0,1fr))}#hgrid .pc:first-child .tile{min-height:0;height:auto;aspect-ratio:4/5}}
+.pc{position:relative;min-width:0;display:flex;flex-direction:column}
+.pc[data-off="1"]{opacity:.5}
+.pcm{display:block;width:100%;text-align:start;background:none;border:0;padding:0;cursor:pointer;flex:1}
+.tile{aspect-ratio:4/5;display:grid;place-items:center;position:relative;overflow:hidden;border-radius:2px;background:color-mix(in srgb,var(--ink) 6%,var(--surface));color:var(--ink-2)}
+.tile img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.pcm:hover .tile img{transform:scale(1.04)}
+.tile svg{width:34%;height:34%;stroke-width:1.1;opacity:.5}
+.tag{position:absolute;inset-block-start:10px;inset-inline-start:10px;font-size:12px;padding:1px 9px;background:var(--surface);color:var(--ink);border:1px solid var(--rule);border-radius:2px}
+.pi{display:grid;gap:2px;padding:14px 48px 0 0}
+[dir=rtl] .pi{padding:14px 0 0 48px}
+.pn{font-weight:500;line-height:1.45}
+.pp{font-weight:600}.pp s{color:var(--muted);font-weight:400;font-size:13px;margin-inline-start:8px}.pp small{font-weight:400;color:var(--muted)}
+.addb{position:absolute;inset-inline-end:0;bottom:0;width:38px;height:38px;border-radius:4px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;display:grid;place-items:center;transition:background .2s,color .2s}
+.addb:hover{background:var(--ink);color:var(--paper)}
+.empty{padding:56px 0;text-align:center;color:var(--muted);grid-column:1/-1}
+.strip{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 18px;scrollbar-width:thin}
+.pz{flex:none;width:clamp(200px,40vw,260px);scroll-snap-align:start;border:0;padding:0;cursor:pointer;text-align:start;background:none}
+.pz img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;border-radius:2px;transition:transform .5s}
+.pz:hover img{transform:scale(1.03)}
+.pz .in{position:static;display:grid;padding:12px 0 0;font-size:15px}.pz .in b{font-weight:500}
+/* filters */
+.filters{display:grid;gap:16px;margin-bottom:32px}
+.fr1{display:flex;gap:14px;flex-wrap:wrap}.search{flex:1;min-width:200px}
+.seg{display:flex;gap:26px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--rule)}
+.seg::-webkit-scrollbar{display:none}
+.chip{flex:none;min-height:42px;padding:0 2px;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;cursor:pointer;white-space:nowrap;font-weight:500;color:var(--muted);transition:color .2s,border-color .2s}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{color:var(--ink);border-bottom-color:var(--gold)}
+.oh .chip{min-height:0;border:1px solid var(--rule-2);border-radius:2px;padding:1px 10px;margin:0;font-size:12px;color:var(--ink)}
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ink)}
+.st{padding:28px 28px 8px;border-inline-start:1px solid var(--rule);display:grid;gap:10px;align-content:start}
+.st:first-child{border-inline-start:0;padding-inline-start:0}
+.st .n{font:700 clamp(52px,6vw,84px)/1 var(--font-display);color:var(--gold);display:block}
+.st .n svg{width:40px;height:40px}
+.st b{font:600 21px var(--font-display)}.st p{margin:0;color:var(--muted)}
+@media (max-width:720px){.steps{grid-template-columns:1fr}.st{border-inline-start:0;border-top:1px solid var(--rule);padding-inline:0}.st:first-child{border-top:0}}
+/* visit */
+.visit{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(24px,5vw,64px);align-items:start}
+.gal{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.gal figure{margin:0;position:relative;overflow:hidden;aspect-ratio:1;border-radius:2px}
+.gal figure:first-child{grid-column:1/-1;aspect-ratio:16/10}
+.gal img{width:100%;height:100%;object-fit:cover;display:block}
+.gal figcaption{position:absolute;inset-inline-start:0;bottom:0;background:var(--paper);color:var(--ink);padding:6px 14px;font-size:13px;font-weight:500}
+.vi{display:grid;gap:0;align-content:start}
+.vi h3{font:600 clamp(24px,3vw,32px) var(--font-display);padding-bottom:14px;border-bottom:1px solid var(--ink)}
+.vr{display:grid;gap:2px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.vr .k{font-size:13px;color:var(--muted)}.vr .v{font-weight:500;overflow-wrap:anywhere}
+@media (max-width:820px){.visit{grid-template-columns:1fr}}
+/* footer */
+.ftr{margin-top:clamp(64px,10vw,140px);background:var(--ink);color:#E8ECF7;padding:clamp(32px,6vw,72px) clamp(20px,4vw,56px) 24px}
+:root[data-theme="dark"] .ftr{background:#0E2257}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ftr{background:#0E2257}}
+.fc{display:grid;grid-template-columns:1.4fr 1fr 1.2fr 1fr;gap:clamp(24px,4vw,56px)}
+.fc h4{margin:0 0 14px;font:600 16px var(--font-display);color:#FFE066}
+.fc a,.fc span{display:block;color:#E8ECF7;text-decoration:none;font-size:14.5px;padding:4px 0;opacity:.9;transition:color .2s,opacity .2s}
+.fc a:hover{color:#FFE066;opacity:1}
+.fb .logo.brandimg img{background:#fff;border-radius:6px;padding:4px 10px;height:56px}
+.fb p{margin:18px 0 0;font:600 clamp(20px,2.4vw,28px)/1.35 var(--font-display);color:#fff;max-width:14ch}
+.fl{margin-top:44px;padding-top:18px;border-top:1px solid rgba(255,255,255,.18);color:#AAB6D6;font-size:13px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.fll{display:flex;gap:18px;flex-wrap:wrap}.fll a{color:#AAB6D6;text-decoration:none}.fll a:hover{color:#FFE066}
+@media (max-width:820px){.fc{grid-template-columns:1fr 1fr}}@media (max-width:480px){.fc{grid-template-columns:1fr}}
+/* tab bar */
+.tabbar{position:fixed;inset-inline:0;bottom:0;z-index:45;display:none;gap:0;padding:6px max(8px,env(safe-area-inset-left,0px)) calc(6px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--rule)}
+.tab{flex:1;position:relative;min-height:54px;border:0;background:transparent;display:grid;place-items:center;align-content:center;gap:2px;font-size:11px;font-weight:500;color:var(--muted);text-decoration:none;cursor:pointer}
+.tab[aria-current="page"]{color:var(--ink)}
+.tab[aria-current="page"]::before{content:"";position:absolute;inset-inline:28%;top:-7px;height:2px;background:var(--gold)}
+.tab .cbadge{inset-block-start:4px;inset-inline-end:calc(50% - 22px)}
+@media (max-width:760px){.tabbar{display:flex}.nl{display:none}body{padding-bottom:78px}.nav .logo .lt small{display:none}}
+/* drawers */
+.layer{position:fixed;inset:0;z-index:70;background:var(--scrim);display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:100%;max-width:560px;max-height:92vh;overflow:auto;padding:24px 22px calc(26px + env(safe-area-inset-bottom,0px));display:grid;gap:16px;align-content:start;background:var(--paper);border-top:2px solid var(--gold)}
+@media (min-width:760px){.layer{align-items:stretch;justify-content:flex-end}.sheet{max-width:500px;max-height:none;height:100%;border-top:0;border-inline-start:1px solid var(--rule)}}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:drawer .35s cubic-bezier(.2,.7,.2,1) both}@keyframes drawer{from{opacity:0;transform:translateY(24px)}}
+  @media (min-width:760px){.sheet{animation-name:drawerx}@keyframes drawerx{from{opacity:0;transform:translateX(-36px)}}[dir=ltr] .sheet{animation-name:drawerxl}@keyframes drawerxl{from{opacity:0;transform:translateX(36px)}}}}
+.sheet h2{font:600 26px var(--font-display)}
+.shead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--rule)}
+.pd{display:grid;gap:14px}.pd .tile{max-width:340px;width:100%;margin-inline:auto}
+.line{display:grid;grid-template-columns:1fr auto;gap:4px 10px;padding-block:14px;border-bottom:1px solid var(--rule);align-items:center}
+.line .n{font-weight:500;min-width:0}
+.stepper{display:inline-flex;align-items:center;border:1px solid var(--rule-2);border-radius:4px;background:var(--surface)}
+.stepper button{width:38px;height:38px;border:0;background:none;cursor:pointer;font-size:18px}
+.stepper span{min-width:28px;text-align:center}
+.sum{display:grid;gap:6px}.sum div{display:flex;justify-content:space-between;gap:10px}
+.sum .tot{font:600 21px/1.4 var(--font-display);border-top:1px solid var(--ink);padding-top:10px;margin-top:6px}
+/* forms */
+.field{display:grid;gap:5px}.field label,.lbl{font-size:14px;color:var(--muted);font-weight:500}
+.inp{width:100%;min-height:46px;border:1px solid var(--rule-2);background:var(--surface);border-radius:4px;padding:8px 14px;transition:border-color .2s}
+.inp:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+textarea.inp{min-height:84px;resize:vertical}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--rule-2);background:var(--surface);border-radius:4px;padding:12px 14px;cursor:pointer;transition:border-color .2s}
+.opt input{margin-top:5px;accent-color:var(--ink)}
+.opt[data-on="1"]{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.opt small{display:block;color:var(--muted)}
+.note{border:0;border-inline-start:3px solid var(--gold);background:var(--surface);border-radius:0;padding:12px 16px;font-size:14.5px}
+.note.err{border-inline-start-color:var(--danger);color:var(--danger)}.note.warn{border-inline-start-color:var(--warn)}
+.msgbox{white-space:pre-wrap;background:var(--surface);border:1px dashed var(--rule-2);border-radius:4px;padding:12px 14px;font-size:14px;max-height:200px;overflow:auto}
+.toast{position:fixed;inset-inline:0;bottom:calc(86px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;z-index:80;pointer-events:none}
+.toast span{background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:4px;font-size:14px;font-weight:500}
+@media (min-width:761px){.toast{bottom:28px}}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media (max-width:420px){.row2{grid-template-columns:1fr}}
+/* pages */
+.pagehead{margin-block:clamp(36px,6vw,72px) 32px;padding-bottom:22px;border-bottom:1px solid var(--rule)}
+.pagehead h1{font:700 clamp(34px,5.6vw,68px)/1.08 var(--font-display);letter-spacing:-.01em}
+.pagehead p{margin:10px 0 0;color:var(--muted);max-width:60ch;font-size:clamp(16px,1.8vw,19px)}
+.crumb{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px;color:var(--muted);font-size:14px}.crumb a{text-decoration:none}.crumb a:hover{color:var(--ink);text-decoration:underline}
+.pdp{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,6vw,80px);margin-top:20px;align-items:start}
+.pdp-i{position:sticky;top:96px}.pdp-i .tile{aspect-ratio:4/5;max-height:620px}.pdp-i .tile svg{width:30%;height:30%}
+.pdp-b{display:grid;gap:18px;padding:0;border:0}
+.pdp-b h1{font:700 clamp(30px,4.6vw,56px)/1.1 var(--font-display)}
+.pdp-p{font:600 30px var(--font-display)}.pdp-n{margin:0;padding:16px 0;border-block:1px solid var(--rule);color:var(--muted)}
+.pdp-b h3{margin:4px 0 0;font:600 18px var(--font-display)}.pdp-d{margin:0;line-height:1.95;max-width:56ch}
+@media (max-width:820px){.pdp{grid-template-columns:1fr}.pdp-i{position:static}}
+.about{padding:0 0 28px;margin-bottom:28px;border-bottom:1px solid var(--rule)}.about p{margin:0;font:400 clamp(19px,2.2vw,26px)/1.9 var(--font-body);max-width:60ch}
+.cform{display:grid;gap:16px;max-width:620px;padding:0}.cform label{display:grid;gap:6px;font-weight:500;font-size:14px;color:var(--muted)}
+.legal{display:grid;gap:0;max-width:780px}
+.legal p{margin:0;padding:16px 0;border-bottom:1px solid var(--rule);line-height:1.95}
+.legal details{border-bottom:1px solid var(--rule);padding:18px 0}.legal summary{cursor:pointer;font:600 19px var(--font-display)}.legal details p{border:0;padding:10px 0 0;color:var(--muted)}
+.olist{display:block;border-top:1px solid var(--ink)}
+.oc{padding:24px 0;border-bottom:1px solid var(--rule);display:grid;gap:8px}
+.oh,.of{display:flex;justify-content:space-between;align-items:center;gap:10px}.om{color:var(--muted);font-size:13px}.oi{margin:0}.of b{font:600 20px var(--font-display)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+select.inp,.fr1 select{border-radius:4px}
+@media (max-width:760px){.nav .ib.acc{display:none}.nsearch input{width:110px}.nsearch input:focus{width:140px}}
+
+/* brand: navy + signature orange (official palette) */
+:root{--font-display:'Montserrat','Tajawal','IBM Plex Sans Arabic',system-ui,sans-serif}
+html[lang="ar"] *{letter-spacing:0!important}
+::selection{background:#FFD21F;color:#0A1433}
+.btn.primary{background:#FFD21F;border-color:#FFD21F;color:#0A1433}
+.btn.primary:hover{background:#FFE066;border-color:#FFE066;color:#0A1433}
+.cbadge{background:#FFD21F;color:#0A1433}
+.logo.brandimg img{height:46px;max-width:150px}
+.hero{background:#0E2257;color:#fff;padding:clamp(26px,5vw,64px);border-radius:4px;margin-top:20px;overflow:hidden}
+.hero::after{content:"";position:absolute;inset-inline-start:-140px;bottom:-160px;width:480px;height:480px;background:url(/brand/mark-light.png) center/contain no-repeat;opacity:.07;pointer-events:none}
+.hero-t,.hero-f{position:relative;z-index:1}
+.hero h1{color:#fff;font-weight:800}
+.hero p{color:#C5D0DD}
+.hero .btn.link{color:#fff}
+.hero-f figcaption{color:#C5D0DD;border-color:rgba(255,255,255,.22)}
+.ftr .fb .logo.brandimg img{background:none!important;padding:0!important;border-radius:0!important;height:68px;max-width:none}
+.tile svg{color:#1F4FD8}
+
+/* brand v3: royal blue + yellow, from the round Slimi Library badge */
+:root{--line:#1F4FD8;--blue:#1F4FD8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--line:#FFD21F;--ink-2:#AEC0F5}}
+:root[data-theme="dark"]{--line:#FFD21F;--ink-2:#AEC0F5}
+.nl a::after{background:var(--line)}
+.chip[aria-pressed="true"]{border-bottom-color:var(--line)}
+.tab[aria-current="page"]::before{background:var(--line)}
+.sh a,.btn.link{text-decoration-color:var(--line)}
+.note{border-inline-start-color:var(--line)}
+.st .n{color:var(--line)}
+.btn.primary{border-color:#E6B800}
+.btn.primary:hover{border-color:#FFE066}
+.cbadge{background:#1F4FD8;color:#fff}
+.tag{background:#FFD21F;color:#0E2257;border-color:#FFD21F}
+.hero{background:#1D47C8}
+.hero::after{display:none}
+.hero-f::before{border-color:#FFD21F}
+.hero .btn.link{text-decoration-color:#FFD21F}
+.hero p,.hero-f figcaption{color:#DCE5FF}
+.logo .mark{width:50px;height:50px;border-radius:50%;background:none}
+.logo .mark img{width:100%;height:100%;object-fit:contain;background:none;border-radius:50%}
+.logo .lt small{color:var(--muted)}
+.ftr .logo{color:#fff;gap:14px}.ftr .logo .lt small{color:#C9D3F5}
+.ftr .logo .mark{width:84px;height:84px}
+.ftr .logo .lt b{font-size:26px}
+@media (max-width:760px){.nav .logo .mark{width:44px;height:44px}}
+
+/* ===== Liquid Glass over the Slimi Library palette ===== */
+:root{--glass:rgba(255,255,255,.55);--glass-hi:rgba(255,255,255,.84);--g-edge:rgba(255,255,255,.92);--g-line:rgba(14,34,87,.10);
+ --g-shadow:0 22px 46px -24px rgba(14,34,87,.42);--spec:linear-gradient(135deg,rgba(255,255,255,.78),rgba(255,255,255,0) 44%);--field:rgba(255,255,255,.7);
+ --chip-on:#1F4FD8;--chip-on-ink:#fff;--blob-a:rgba(31,79,216,.34);--blob-b:rgba(255,210,31,.42);--blob-c:rgba(38,197,216,.28)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--glass:rgba(20,36,104,.5);--glass-hi:rgba(22,40,112,.82);--g-edge:rgba(255,255,255,.18);--g-line:rgba(255,255,255,.1);
+ --g-shadow:0 22px 46px -24px rgba(0,0,0,.7);--spec:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,0) 44%);--field:rgba(255,255,255,.07);
+ --chip-on:#FFD21F;--chip-on-ink:#0A1433;--blob-a:rgba(31,79,216,.5);--blob-b:rgba(255,210,31,.16);--blob-c:rgba(38,197,216,.22)}}
+:root[data-theme="dark"]{--glass:rgba(20,36,104,.5);--glass-hi:rgba(22,40,112,.82);--g-edge:rgba(255,255,255,.18);--g-line:rgba(255,255,255,.1);
+ --g-shadow:0 22px 46px -24px rgba(0,0,0,.7);--spec:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,0) 44%);--field:rgba(255,255,255,.07);
+ --chip-on:#FFD21F;--chip-on-ink:#0A1433;--blob-a:rgba(31,79,216,.5);--blob-b:rgba(255,210,31,.16);--blob-c:rgba(38,197,216,.22)}
+.ambient{display:block;position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.ambient i{position:absolute;border-radius:50%;filter:blur(80px)}
+.ambient .b1{width:48vw;height:48vw;inset-inline-start:-12vw;top:-10vw;background:var(--blob-a)}
+.ambient .b2{width:36vw;height:36vw;inset-inline-end:-8vw;top:34vh;background:var(--blob-b)}
+.ambient .b3{width:42vw;height:42vw;inset-inline-start:22vw;bottom:-16vw;background:var(--blob-c)}
+.glass,.svc,.trust>div,.opt,.note,.sheet{background:var(--spec),var(--glass);-webkit-backdrop-filter:blur(22px) saturate(1.7);backdrop-filter:blur(22px) saturate(1.7);
+ border:1px solid var(--g-edge);box-shadow:var(--g-shadow),inset 0 1px 0 rgba(255,255,255,.55)}
+/* header */
+.util{border-bottom:0}
+.nav.glass{margin-top:10px;padding:8px 14px;border-radius:999px;top:calc(env(safe-area-inset-top,0px) + 8px)}
+.nl a{border-radius:999px}.nl a::after{inset-inline:14px}
+.nsearch{background:var(--field);border:1px solid var(--g-line);border-radius:999px;padding:0 6px}
+.nsearch:focus-within{border-color:#1F4FD8}
+.ib{border-radius:999px}.ib:hover{background:var(--glass-hi)}
+.logo .mark{box-shadow:0 6px 16px -6px rgba(14,34,87,.5)}
+/* buttons, chips, fields */
+.btn{border-radius:999px;border-color:var(--g-edge);background:var(--spec),var(--glass);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:var(--g-shadow)}
+.btn:hover{background:var(--glass-hi);color:var(--ink)}
+.btn.primary{background:#FFD21F;border-color:#FFE066;color:#0A1433;box-shadow:0 10px 24px -10px rgba(230,184,0,.9),inset 0 1px 0 rgba(255,255,255,.7)}
+.btn.primary:hover{background:#FFE066;color:#0A1433}
+.btn.link{background:none;box-shadow:none;border:0;backdrop-filter:none;-webkit-backdrop-filter:none}
+.btn.link:hover{background:none}
+.inp{border-radius:14px;background:var(--field);border-color:var(--g-line)}
+.seg{border-bottom:0;gap:8px}
+.chip{border:1px solid var(--g-line);border-radius:999px;padding:0 16px;margin:0;background:var(--spec),var(--glass);min-height:38px;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.chip[aria-pressed="true"]{background:var(--chip-on);color:var(--chip-on-ink);border-color:var(--chip-on)}
+.stepper{border-radius:999px}
+.addb{border-radius:50%;background:#FFD21F;border-color:#FFE066;color:#0A1433;width:40px;height:40px}
+.addb:hover{background:#FFE066;color:#0A1433}
+/* hero */
+.hero{border-radius:30px;box-shadow:0 30px 60px -34px rgba(29,71,200,.7)}
+.hero::after{display:block;width:360px;height:360px;border-radius:50%;background:#26C5D8;filter:blur(90px);opacity:.45;inset-inline-start:-90px;bottom:-130px;opacity:.45}
+.hero-f::before{display:none}
+.hero-f img{border-radius:24px;border:1px solid rgba(255,255,255,.55);box-shadow:0 24px 50px -24px rgba(0,0,0,.6)}
+.hero-f figcaption{margin-top:14px;padding:10px 16px;border:1px solid rgba(255,255,255,.28);border-radius:16px;background:rgba(255,255,255,.14);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);color:#fff}
+/* services, trust, steps */
+.svcs{border-top:0;display:grid;gap:12px}
+.svc{border-bottom:1px solid var(--g-edge);border-radius:24px;padding:24px 28px}
+.svc:hover{background:var(--spec),var(--glass-hi);padding-inline:34px}
+.trust{border:0;gap:12px}
+.trust>div{border-radius:20px;padding:18px 22px}
+.trust>div:first-child{padding-inline-start:22px}
+@media (max-width:760px){.trust>div:nth-child(odd){padding-inline-start:22px}.trust>div:nth-child(n+3){border-top:1px solid var(--g-edge)}}
+.steps{border-top:0;gap:14px}
+.st.glass{border-radius:26px;padding:26px;border-inline-start:1px solid var(--g-edge)}
+.st:first-child{padding-inline-start:26px}
+@media (max-width:720px){.st{border-top:1px solid var(--g-edge)}.st:first-child{border-top:1px solid var(--g-edge)}}
+/* products */
+.pc.glass{padding:10px;border-radius:26px}
+.pc.glass .tile{border-radius:18px}
+.pi{padding:12px 54px 4px 6px}[dir=rtl] .pi{padding:12px 6px 4px 54px}
+.addb{inset-inline-end:16px;bottom:16px}
+.pc.glass:hover{transform:translateY(-3px)}
+.pc.glass{transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s}
+.tag.glass{background:rgba(255,210,31,.95);border-color:rgba(255,255,255,.6);border-radius:999px;box-shadow:none;color:#0A1433;-webkit-backdrop-filter:none;backdrop-filter:none}
+.pz img{border-radius:20px}
+.gal figure{border-radius:24px}
+/* panels */
+.filters.glass,.cform.glass,.about.glass,.legal.glass,.oc.glass,.pdp-b.glass,.vi.glass{padding:clamp(18px,3vw,30px);border-radius:26px}
+.about.glass{margin-bottom:28px}.legal.glass{max-width:780px}
+.olist{border-top:0;display:grid;gap:14px}
+.vr:last-child{border-bottom:0}
+.opt,.note{border-radius:16px}
+.note{border-inline-start:1px solid var(--g-edge)}
+.pdp-i .tile{border-radius:26px}
+/* drawers, tab bar, toast */
+.sheet{border-radius:28px 28px 0 0;border-top:1px solid var(--g-edge);background:var(--spec),var(--glass-hi)}
+@media (min-width:760px){.layer{padding:12px}.sheet{border-radius:28px;height:100%;border:1px solid var(--g-edge)}}
+.tabbar.glass{inset-inline:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));border-radius:28px;padding:6px 8px;border-top:1px solid var(--g-edge)}
+.tab{border-radius:20px}.tab[aria-current="page"]{background:rgba(31,79,216,.12)}.tab[aria-current="page"]::before{display:none}
+.toast span{border-radius:999px;box-shadow:var(--g-shadow)}
+.ftr{border-radius:30px}
+@media (prefers-reduced-motion:reduce){.pc.glass:hover{transform:none}}
+.trust{margin-top:14px}
+
+/* services: image sections */
+.svcs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:18px;border-top:0}
+.svcs .svc{display:flex;flex-direction:column;gap:0;padding:0;overflow:hidden;border-radius:26px;align-items:stretch;transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s}
+.svcs .svc:hover{padding:0;transform:translateY(-4px)}
+.svi{display:block;aspect-ratio:16/10;overflow:hidden;background:#1D47C8}
+.svi img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.svc:hover .svi img{transform:scale(1.06)}
+.svb{display:grid;gap:6px;padding:18px 22px 22px;align-content:start}
+.svb b{font:700 clamp(20px,2.2vw,26px)/1.3 var(--font-display)}
+.svb .s{color:var(--muted)}
+.svb .go{font-weight:600;margin-top:8px;color:var(--ink)}
+.pagehead.has-img{display:grid;grid-template-columns:1.2fr .8fr;gap:clamp(18px,4vw,48px);align-items:center}
+.pagehead.has-img img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:26px;border:1px solid var(--g-edge);box-shadow:var(--g-shadow)}
+@media (max-width:760px){.pagehead.has-img{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.svcs .svc:hover{transform:none}.svc:hover .svi img{transform:none}}
+/* ui polish v1: touch targets, focus, states, mobile 2-col */
+:focus-visible{outline:3px solid var(--line);outline-offset:3px}
+.ib{min-width:44px;height:44px}.chip{min-height:44px}.btn{min-height:48px}
+.stepper button{width:44px;height:44px}
+.pdp-q{display:flex;align-items:center;gap:14px;margin:18px 0 4px}
+.pdp-q .lab{font-weight:600;color:var(--muted)}
+.state{display:grid;justify-items:center;gap:14px;text-align:center;padding:84px 20px;color:var(--muted)}
+.state b{display:block;color:var(--ink);font-size:21px}
+.state svg{opacity:.9}
+.empty{border:1px dashed var(--rule-2);border-radius:18px;padding:44px 20px}
+.skl{border-radius:14px;background:linear-gradient(90deg,rgba(130,150,200,.12) 25%,rgba(130,150,200,.26) 50%,rgba(130,150,200,.12) 75%);background-size:200% 100%;animation:sk 1.3s linear infinite}
+@keyframes sk{to{background-position:-200% 0}}
+.skw{max-width:1180px;margin:0 auto;padding:22px max(16px,env(safe-area-inset-left,0px))}
+.skw .skh{height:64px;margin-bottom:26px}.skw .skb{height:260px;margin-bottom:26px}
+.skw .skg{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr));gap:22px}.skw .skg i{display:block;height:200px}
+@media (prefers-reduced-motion:reduce){.skl{animation:none}}
+@media(max-width:600px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 12px}.skw .skg{grid-template-columns:repeat(2,1fr)}}
+/* media gallery */
+.mg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.mv{grid-column:span 2;grid-row:span 2;margin:0;border-radius:22px;overflow:hidden;background:#0E2257;box-shadow:var(--g-shadow,0 12px 30px #0E225522)}
+.mv video{display:block;width:100%;height:100%;min-height:220px;object-fit:cover;background:#0E2257}
+.mp{padding:0;border:0;border-radius:18px;overflow:hidden;aspect-ratio:1;cursor:zoom-in;background:var(--glass)}
+.mp img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .35s}
+.mp:hover img{transform:scale(1.05)}
+.zoom{position:fixed;inset:0;z-index:300;display:grid;place-items:center;background:rgba(14,34,87,.88);cursor:zoom-out;padding:20px}
+.zoom img{max-width:100%;max-height:100%;border-radius:16px;box-shadow:0 20px 60px #0008}
+.zoom button{position:absolute;top:max(14px,env(safe-area-inset-top,0px));inset-inline-end:16px;width:46px;height:46px;border-radius:50%;border:0;background:#FFD21F;color:#0E2257;font-size:26px;cursor:pointer}
+@media(max-width:700px){.mg{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.mv{grid-column:1/-1;grid-row:auto}.mv video{aspect-ratio:16/10;min-height:0}}
+.mfew{display:grid;gap:14px}.mfew .mv{grid-column:auto;grid-row:auto}.mfew .mv video{aspect-ratio:16/8;min-height:0}.mg2{display:grid;gap:14px}
+@media(max-width:700px){.mfew{gap:10px}.mfew .mv video{aspect-ratio:16/10}.mg2{gap:10px}}
+/* review fixes */
+#hgrid.flat .pc:first-child{grid-column:auto;grid-row:auto}
+#hgrid.flat .pc:first-child .tile{aspect-ratio:4/5;height:auto;min-height:0}
+#hgrid.flat .pc:nth-child(n+5){display:none}
+.ib.acc .an{max-width:150px}
+@media (max-width:1320px){.nl a{padding:8px 8px;font-size:14px}.nl{margin-inline-start:8px}.nsearch input{width:130px}.nsearch input:focus{width:190px}}
+@media (max-width:760px){.nsearch input::placeholder{color:transparent}.nsearch input{width:90px}}
+@media (max-width:760px){.nav .ib{padding-inline:8px;font-size:13px}}
+</style>
+<div id="app"></div>
+<script id="code">
+(function(){
+'use strict';
+var DATA={settings:{address:{ar:'',fr:''}},products:[]};
+var app=document.getElementById('app');
+var CATS=[
+ {id:'school',ar:'أدوات مدرسية',fr:'Fournitures scolaires'},
+ {id:'office',ar:'مستلزمات مكتبية',fr:'Bureau'},
+ {id:'apps',ar:'اشتراكات وتطبيقات',fr:'Abonnements et applis'},
+ {id:'games',ar:'ألعاب وشحن',fr:'Jeux et recharges'},
+ {id:'services',ar:'خدمات',fr:'Services'}];
+var GLYPH={
+ school:'<path d="M4 20l1-4L16 5l3 3L8 19l-4 1z"/><path d="M14 7l3 3"/>',
+ office:'<rect x="6" y="3" width="12" height="18" rx="1.5"/><path d="M9 8h6M9 12h6M9 16h4"/>',
+ apps:'<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M10 9l5 3-5 3z"/>',
+ games:'<rect x="2.5" y="7" width="19" height="10" rx="5"/><path d="M8 10v4M6 12h4M16 11h.01M18 13h.01"/>',
+ services:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>'};
+var ICON={
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4.5 4.5-6.5 8-6.5s7 2 8 6.5"/>',
+ search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
+ phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
+ mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+ play:'<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M10 9l5 3-5 3z"/>',
+ game:'<rect x="2.5" y="7" width="19" height="10" rx="5"/><path d="M8 10v4M6 12h4M16 11h.01M18 13h.01"/>',
+ doc:'<path d="M6 3h9l4 4v14H6z"/><path d="M9 12h6M9 16h6M9 8h3"/>',
+ pen:'<path d="M4 20l1-4L16 5l3 3L8 19l-4 1z"/><path d="M14 7l3 3"/>',
+ shield:'<path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+ bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+ tag:'<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.3"/>',
+ chat:'<path d="M4 5h16v11H9l-5 4z"/>',
+ home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+ shop:'<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>',
+ pin:'<path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+ bag:'<path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ refresh:'<path d="M20 12a8 8 0 1 1-2.5-5.8"/><path d="M20 4v5h-5"/>',
+ gear:'<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>',
+ book:'<path d="M12 6.5c-1.8-1.3-4.2-1.8-7-1.5v12c2.8-.3 5.2.2 7 1.5 1.8-1.3 4.2-1.8 7-1.5V5c-2.8-.3-5.2.2-7 1.5z"/><path d="M12 6.5v12"/>'};
+function ic(n,s){s=s||22;return '<svg class="ic" viewBox="0 0 24 24" width="'+s+'" height="'+s+'" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ICON[n]+'</svg>'}
+var WIL=('01|أدرار|Adrar;02|الشلف|Chlef;03|الأغواط|Laghouat;04|أم البواقي|Oum El Bouaghi;05|باتنة|Batna;06|بجاية|Béjaïa;07|بسكرة|Biskra;08|بشار|Béchar;09|البليدة|Blida;10|البويرة|Bouira;11|تمنراست|Tamanrasset;12|تبسة|Tébessa;13|تلمسان|Tlemcen;14|تيارت|Tiaret;15|تيزي وزو|Tizi Ouzou;16|الجزائر|Alger;17|الجلفة|Djelfa;18|جيجل|Jijel;19|سطيف|Sétif;20|سعيدة|Saïda;21|سكيكدة|Skikda;22|سيدي بلعباس|Sidi Bel Abbès;23|عنابة|Annaba;24|قالمة|Guelma;25|قسنطينة|Constantine;26|المدية|Médéa;27|مستغانم|Mostaganem;28|المسيلة|M\'Sila;29|معسكر|Mascara;30|ورقلة|Ouargla;31|وهران|Oran;32|البيض|El Bayadh;33|إليزي|Illizi;34|برج بوعريريج|Bordj Bou Arréridj;35|بومرداس|Boumerdès;36|الطارف|El Tarf;37|تندوف|Tindouf;38|تيسمسيلت|Tissemsilt;39|الوادي|El Oued;40|خنشلة|Khenchela;41|سوق أهراس|Souk Ahras;42|تيبازة|Tipaza;43|ميلة|Mila;44|عين الدفلى|Aïn Defla;45|النعامة|Naâma;46|عين تموشنت|Aïn Témouchent;47|غرداية|Ghardaïa;48|غليزان|Relizane;49|تيميمون|Timimoun;50|برج باجي مختار|Bordj Badji Mokhtar;51|أولاد جلال|Ouled Djellal;52|بني عباس|Béni Abbès;53|عين صالح|In Salah;54|عين قزام|In Guezzam;55|تقرت|Touggourt;56|جانت|Djanet;57|المغير|El M\'Ghair;58|المنيعة|El Meniaa').split(';').map(function(s){var a=s.split('|');return{id:a[0],ar:a[1],fr:a[2]}});
+
+var TX={
+ ar:{home:'الرئيسية',shop:'المتجر',visit:'زيارتنا',cart:'السلة',add:'أضف إلى السلة',all:'الكل',search:'ابحث عن منتج أو خدمة',none:'لا توجد نتائج مطابقة.',onreq:'السعر حسب الطلب',unavail:'غير متوفر',digital:'رقمي',
+  n_home:'الرئيسية',n_subs:'الاشتراكات',n_bills:'دفع الفواتير',n_shop:'المتجر',n_offers:'العروض',n_about:'من نحن',n_contact:'تواصل معنا',n_track:'تتبع طلبك',hsearch:'ابحث عن منتج أو خدمة',
+ svcT:'خدماتنا',svcA:'اشتراكات التطبيقات',svcAd:'Netflix وGemini وSnapchat+ وأكثر',svcG:'شحن الألعاب',svcGd:'بطاقات وشحن فوري للألعاب',svcB:'دفع الفواتير',svcBd:'مختلف الخدمات بسرعة وأمان',svcS:'القرطاسية',svcSd:'أدوات مدرسية ومكتبية',orderNow:'اطلب الآن',popT:'الأكثر طلباً',
+ subsT:'الاشتراكات وشحن الألعاب',subsS:'تُسلَّم بعد تأكيد الدفع، وتصلك بياناتها في صفحة تتبع الطلب.',appsH:'اشتراكات التطبيقات',gamesH:'شحن الألعاب',
+ billsT:'دفع الفواتير والخدمات',billsS:'ندفع فاتورتك بسرعة. أرسل رقم الخط أو العقد ونؤكد لك العملية.',bs1:'اختر الخدمة',bs1d:'من قائمة الفواتير والخدمات الرقمية.',bs2:'أدخل رقم الخط أو العقد',bs2d:'نحتاجه لتسديد الفاتورة بدقة.',bs3:'ادفع واستلم التأكيد',bs3d:'نؤكد لك العملية في صفحة تتبع الطلب.',
+ offT:'العروض',offS:'منتجات بأسعار مخفّضة لفترة محدودة.',offNone:'لا توجد عروض حالياً. تابعنا قريباً.',
+ abT:'من نحن',abS:'مكتبة سليمي، عطبة (تيبازة).',abP:'مكتبة سليمي تقدّم الأدوات المدرسية والمكتبية، إضافة إلى خدمات رقمية: اشتراكات التطبيقات وشحن الألعاب ودفع الفواتير. نحرص على الجودة وسرعة التنفيذ وخدمة قريبة منك، في المحل أو عبر الطلب من هنا.',av1:'جودة مضمونة',av1d:'منتجات وخدمات نتحقق منها قبل التسليم.',av2:'سرعة في التنفيذ',av2d:'نؤكد طلبك ونسلّمه في أقرب وقت.',av3:'خدمة قريبة منك',av3d:'واتساب وهاتف ومحل مفتوح لاستقبالك.',
+ ctT:'تواصل معنا',ctS:'اكتب لنا وسنرد عليك عبر واتساب.',ctName:'اسمك',ctMsg:'رسالتك',ctSend:'إرسال عبر واتساب',
+ ftTag:'أكثر من مجرد مكتبة',ftLinks:'روابط سريعة',ftPay:'طرق الدفع',ftCod:'الدفع عند الاستلام',ftTr:'تحويل CCP / بريدي موب',ftOn:'دفع إلكتروني بالبطاقة',ftRights:'جميع الحقوق محفوظة',
+ n_login:'دخول',n_account:'حسابي',lgT:'حسابك في مكتبة سليمي',lgS:'تابع طلباتك واحفظ بياناتك لطلب أسرع.',tabIn:'تسجيل الدخول',tabReg:'إنشاء حساب',lgPhone:'رقم الهاتف',lgPw:'كلمة السر',lgName:'الاسم الكامل',lgMail:'البريد الإلكتروني (اختياري)',lgIn:'ادخل',lgReg:'أنشئ حسابي',
+ e_name:'اكتب اسمك الكامل (3 أحرف على الأقل).',e_phone:'رقم هاتف جزائري صحيح، مثل 0661234567.',e_password:'كلمة السر 6 أحرف على الأقل.',e_exists:'هذا الرقم مسجّل. ادخل بحسابك.',e_bad_credentials:'الهاتف أو كلمة السر غير صحيحة.',e_slow_down:'محاولات كثيرة. انتظر قليلاً.',e_net:'تعذّر الاتصال. حاول مجدداً.',
+ acHi:'مرحباً',acOrders:'طلباتي',acNone:'لا توجد طلبات بعد. ابدأ من المتجر.',acOut:'تسجيل الخروج',acTrack:'تتبّع',acItems:'المنتجات',acDeliv:'بيانات التسليم',
+ pdBack:'المتجر',pdAbout:'عن المنتج',pdDigital:'خدمة رقمية: تُسلَّم بعد تأكيد الدفع، وتصلك بياناتها في صفحة تتبع الطلب.',pdPhysical:'متوفر في المحل أو بالتوصيل. نؤكد طلبك قبل التجهيز.',pdAsk:'اسأل عن هذا المنتج على واتساب',pdRel:'منتجات مشابهة',pdAdd:'أضف إلى السلة',pdQty:'الكمية',pdMissing:'هذا المنتج غير متوفر.',
+ lgFaq:'أسئلة شائعة',lgRet:'الإرجاع والاستبدال',lgTerms:'شروط الاستخدام',lgPriv:'الخصوصية',
+ utilL:'أكثر من مجرد مكتبة، عطبة (تيبازة)',tr1:'أمان وموثوقية',tr1d:'تعاملات مضمونة',tr2:'سرعة في التنفيذ',tr2d:'تأكيد وتسليم سريع',tr3:'أفضل الأسعار',tr3d:'أسعار تنافسية',tr4:'دعم مباشر',tr4d:'عبر واتساب والهاتف',
+  heroH:'المكتبة والألعاب والاشتراكات في مكان واحد',heroP:'أدوات مدرسية ومكتبية، اشتراكات Netflix وGemini، شحن الألعاب ودفع الفواتير. اطلب من هنا واستلم من المحل أو في بيتك.',
+  cta1:'تسوّق الآن',cta2:'زر المحل',catT:'تصفح حسب الفئة',prod:'منتج',digT:'اشتراكات وشحن فوري',digS:'تُسلَّم بعد تأكيد الدفع.',fromShop:'من المتجر',seeAll:'عرض الكل',
+  howT:'كيف تطلب',s1:'اختر منتجاتك',s1d:'أضف ما تريد إلى السلة.',s2:'أرسل الطلب',s2d:'يُفتح واتساب برسالة جاهزة، وتؤكد الطلب مع المكتبة.',s3:'ادفع واستلم',s3d:'عند الاستلام، أو بتحويل بريدي للمنتجات الرقمية.',
+  visitT:'زر المحل',visitS:'نستقبلك في عطبة.',gNight:'واجهة المحل ليلًا',gDay:'واجهة المحل نهارًا',gIn:'داخل المحل',addrK:'العنوان',phoneK:'الهاتف',hoursK:'أوقات العمل',emailK:'البريد',map:'افتح الخريطة',wa:'راسلنا على واتساب',copy:'نسخ نص الطلب',
+  shopS:'كل المنتجات والخدمات، مرتبة حسب الفئة.',sortD:'الترتيب الافتراضي',sortA:'السعر: من الأقل',sortZ:'السعر: من الأعلى',tAll:'كل الأنواع',tPhys:'منتجات',tDig:'رقمي وخدمات',
+  payMix:'منتجات في سلتك لا تشترك في طريقة دفع واحدة. اطلبها في طلبين منفصلين.',e_pay_mix:'منتجات في سلتك لا تشترك في طريقة دفع واحدة. اطلبها في طلبين منفصلين.',galT:'معرض المحل',galS:'صور وفيديو من داخل مكتبة سليمي.',vidL:'فيديو تعريفي بالمحل',loadFail:'تعذّر تحميل المتجر.',loadFailS:'تحقق من الاتصال بالإنترنت ثم حاول مرة أخرى.',retry:'إعادة المحاولة',qtyL:'الكمية',view:'عرض السلة',yourcart:'سلتك',emptycart:'السلة فارغة.',remove:'حذف',close:'إغلاق',next:'متابعة الطلب',back:'رجوع',
+  sub_t:'المجموع',deliv:'التوصيل',total:'الإجمالي',onreqnote:'يُضاف إليه سعر الخدمات حسب الطلب.',
+  name:'الاسم الكامل',phone:'رقم الهاتف',wilaya:'الولاية',pick:'اختر الولاية',addr:'العنوان',notes:'ملاحظة (اختياري)',
+  how:'طريقة الاستلام',home_d:'توصيل إلى المنزل',pickup:'استلام من المكتبة',pickupd:'بدون رسوم توصيل',
+  pay:'طريقة الدفع',cod:'الدفع عند الاستلام',codd:'تدفع للموصّل عند وصول الطلب',transfer:'تحويل بريدي (CCP / بريدي موب)',transferd:'تدفع قبل التنفيذ وترسل صورة الوصل',
+  prepay:'السلة تحتوي على منتجات رقمية أو خدمات، ويتم الدفع مسبقًا.',
+  ccpl:'حساب CCP / RIP',ccpnone:'سيرسل لك البائع بيانات الحساب عبر واتساب.',
+  review:'مراجعة الطلب',err_name:'أدخل الاسم الكامل.',err_phone:'أدخل رقم هاتف جزائري صحيحًا (مثال: 0772 00 00 00).',err_wil:'اختر الولاية.',err_addr:'أدخل عنوان التوصيل.',
+  ready:'طلبك جاهز',notsent:'لم يُرسل الطلب بعد. اضغط الزر أدناه لفتح واتساب وإرساله إلى المكتبة.',sendwa:'إرسال الطلب عبر واتساب',copied:'تم النسخ',copyfail:'تعذر النسخ، حدد النص يدويًا.',neworder:'طلب جديد',
+  added:'تمت الإضافة إلى السلة',feeAfter:'يُحسب حسب الولاية',free:'مجاني',digInfo:'يُسلَّم رقميًا بعد تأكيد الدفع.',physInfo:'متوفر للتوصيل أو الاستلام من المحل.',
+  admin:'لوحة التحكم',products:'المنتجات',settings:'الإعدادات والهوية',addp:'إضافة منتج',edit:'تعديل',del:'حذف',confirmdel:'تأكيد الحذف',hide:'إخفاء',show:'إظهار',
+  nameAr:'الاسم بالعربية',nameFr:'الاسم بالفرنسية',cat:'الفئة',type:'النوع',physical:'منتج مادي (توصيل)',digitalT:'رقمي / خدمة (دفع مسبق)',price:'السعر (دج)',old:'السعر القديم (اختياري)',pricehint:'اترك السعر 0 لعرض «السعر حسب الطلب».',
+  avail:'متوفر للبيع',img:'الصورة',upload:'رفع صورة',rmimg:'إزالة الصورة',savep:'حفظ المنتج',cancel:'إلغاء',
+  waN:'رقم واتساب المكتبة (بصيغة دولية)',ccp:'رقم حساب CCP / RIP',feeL:'رسوم التوصيل داخل تيبازة (دج)',feeO:'رسوم التوصيل لباقي الولايات (دج)',freeF:'توصيل مجاني ابتداءً من (دج، 0 لإلغائه)',phoneN:'الهاتف الظاهر في الصفحة',emailN:'البريد الإلكتروني',hoursN:'أوقات العمل (اختياري)',
+  brand:'الهوية والصور',logoN:'الشعار',facN:'صورة واجهة المحل (الرئيسية)',fac2N:'صورة واجهة المحل نهارًا',noassets:'رفع الصور متاح لحساب المالك فقط.',
+  stP:'المنتجات',stV:'ظاهرة للزبائن',stH:'مخفية',stD:'رقمية وخدمات',
+  pubn:'نشر التغييرات',discard:'تجاهل التعديلات',pending:'تعديلات غير منشورة',published:'تم النشر',pubfail:'تعذر النشر.',notwriter:'ليس لديك صلاحية النشر.',
+  demo:'الأسعار الحالية أمثلة. عدّلها ثم اضغط «تأكيد الأسعار» قبل مشاركة الرابط مع الزبائن.',confirmdemo:'تأكيد الأسعار',goshop:'عرض المتجر',
+  nopermit:'هذه الصفحة للمالك فقط.',lang:'Français',online:'دفع إلكتروني (CIB / الذهبية)',onlined:'تدفع الآن بأمان عبر بوابة الدفع',payNow:'ادفع الآن',payFail:'تعذر فتح صفحة الدفع. حاول من صفحة تتبع الطلب.',refL:'رقم الخط أو العقد (هاتف، كهرباء، ماء)',err_ref:'أدخل رقم الخط أو العقد.',delInfo:'بيانات التسليم',paidBack:'شكرًا لك، يتم تأكيد الدفع خلال لحظات. أدخل رقم هاتفك لمتابعة الطلب.',failBack:'لم تكتمل عملية الدفع. يمكنك المحاولة مرة أخرى من هنا.',track:'تتبع طلبك',trackT:'تتبع طلبك',trackS:'أدخل رقم الطلب ورقم هاتفك.',trackGo:'تتبع',ordNo:'رقم طلبك',ordDone:'تم تسجيل طلبك',ordKeep:'احتفظ بهذا الرقم لمتابعة طلبك. أرسله الآن إلى المكتبة عبر واتساب لتأكيده.',sendProof:'رفع إثبات الدفع',proofHint:'بعد التحويل ارفع صورة الوصل أو أرسلها عبر واتساب.',proofOk:'تم رفع الإثبات، وسنراجعه قريبًا.',proofFail:'تعذر رفع الملف. استعمل صورة أو PDF أقل من 2 ميغابايت.',trackOrder:'تتبع الطلب',notFound:'لم نجد طلبًا بهذه البيانات. تحقق من الرقم والهاتف.',err_net:'تعذر إرسال الطلب. تحقق من الاتصال وأعد المحاولة.',st_new:'جديد',st_confirmed:'مؤكد',st_preparing:'قيد التحضير',st_shipped:'في الطريق',st_delivered:'تم التسليم',st_cancelled:'ملغى',pay_unpaid:'غير مدفوع',pay_proof_sent:'تم إرسال الإثبات',pay_paid:'مدفوع',pay_refunded:'مُسترجع',ordNum:'رقم الطلب',payS:'حالة الدفع',orderT:'طلب جديد من متجر مكتبة سليمي',
+  f_name:'الاسم',f_phone:'الهاتف',f_wil:'الولاية',f_addr:'العنوان',f_how:'الاستلام',f_pay:'الدفع',f_note:'ملاحظة',f_tot:'الإجمالي',f_sub:'المجموع',f_del:'التوصيل',f_onreq:'سعر الخدمات حسب الطلب',da:'دج',libr:'مكتبة',slimi:'سليمي'},
+ fr:{home:'Accueil',shop:'Boutique',visit:'Nous rendre visite',cart:'Panier',add:'Ajouter au panier',all:'Tout',search:'Rechercher un produit ou un service',none:'Aucun résultat.',onreq:'Prix sur demande',unavail:'Indisponible',digital:'Numérique',
+  n_home:'Accueil',n_subs:'Abonnements',n_bills:'Paiement de factures',n_shop:'Boutique',n_offers:'Offres',n_about:'À propos',n_contact:'Contact',n_track:'Suivre ma commande',hsearch:'Rechercher un produit ou service',
+ svcT:'Nos services',svcA:'Abonnements d\'applis',svcAd:'Netflix, Gemini, Snapchat+ et plus',svcG:'Recharges de jeux',svcGd:'Cartes et recharges instantanées',svcB:'Paiement de factures',svcBd:'Vos factures, vite et en sécurité',svcS:'Papeterie',svcSd:'Fournitures scolaires et de bureau',orderNow:'Commander',popT:'Les plus demandés',
+ subsT:'Abonnements et recharges',subsS:'Livrés après confirmation du paiement, avec les accès dans le suivi de commande.',appsH:'Abonnements d\'applis',gamesH:'Recharges de jeux',
+ billsT:'Paiement de factures et services',billsS:'Nous payons votre facture rapidement. Envoyez le numéro de ligne ou de contrat, nous confirmons.',bs1:'Choisissez le service',bs1d:'Dans la liste des factures et services numériques.',bs2:'Saisissez le numéro de ligne ou de contrat',bs2d:'Nécessaire pour régler la facture avec précision.',bs3:'Payez et recevez la confirmation',bs3d:'Nous confirmons l\'opération dans le suivi de commande.',
+ offT:'Offres',offS:'Produits à prix réduit, pour une durée limitée.',offNone:'Aucune offre pour le moment. Revenez bientôt.',
+ abT:'À propos',abS:'Slimi Bookstore, Attatba (Tipaza).',abP:'Slimi Bookstore propose des fournitures scolaires et de bureau, ainsi que des services numériques : abonnements, recharges de jeux et paiement de factures. Qualité, rapidité et service de proximité, en boutique ou en commandant ici.',av1:'Qualité garantie',av1d:'Produits et services vérifiés avant livraison.',av2:'Rapidité',av2d:'Commande confirmée et livrée au plus vite.',av3:'Service de proximité',av3d:'WhatsApp, téléphone et boutique ouverte.',
+ ctT:'Contact',ctS:'Écrivez-nous, nous répondons sur WhatsApp.',ctName:'Votre nom',ctMsg:'Votre message',ctSend:'Envoyer sur WhatsApp',
+ ftTag:'Plus qu\'une simple librairie',ftLinks:'Liens rapides',ftPay:'Moyens de paiement',ftCod:'Paiement à la livraison',ftTr:'Virement CCP / BaridiMob',ftOn:'Paiement en ligne par carte',ftRights:'Tous droits réservés',
+ n_login:'Connexion',n_account:'Mon compte',lgT:'Votre compte Slimi Bookstore',lgS:'Suivez vos commandes et gardez vos informations pour commander plus vite.',tabIn:'Connexion',tabReg:'Créer un compte',lgPhone:'Téléphone',lgPw:'Mot de passe',lgName:'Nom complet',lgMail:'E-mail (facultatif)',lgIn:'Se connecter',lgReg:'Créer mon compte',
+ e_name:'Saisissez votre nom complet (3 caractères minimum).',e_phone:'Numéro algérien valide, par ex. 0661234567.',e_password:'Mot de passe de 6 caractères minimum.',e_exists:'Ce numéro est déjà inscrit. Connectez-vous.',e_bad_credentials:'Téléphone ou mot de passe incorrect.',e_slow_down:'Trop de tentatives. Patientez un peu.',e_net:'Connexion impossible. Réessayez.',
+ acHi:'Bonjour',acOrders:'Mes commandes',acNone:'Aucune commande pour le moment. Commencez par la boutique.',acOut:'Se déconnecter',acTrack:'Suivre',acItems:'Articles',acDeliv:'Informations de livraison',
+ pdBack:'Boutique',pdAbout:'À propos du produit',pdDigital:'Service numérique : livré après confirmation du paiement, avec les accès dans le suivi de commande.',pdPhysical:'Disponible en boutique ou en livraison. Nous confirmons avant la préparation.',pdAsk:'Poser une question sur WhatsApp',pdRel:'Produits similaires',pdAdd:'Ajouter au panier',pdQty:'Quantité',pdMissing:'Ce produit n\'est pas disponible.',
+ lgFaq:'FAQ',lgRet:'Retours et échanges',lgTerms:'Conditions d\'utilisation',lgPriv:'Confidentialité',
+ utilL:'Plus qu\'une simple librairie, Attatba (Tipaza)',tr1:'Sécurité',tr1d:'Transactions garanties',tr2:'Rapidité',tr2d:'Confirmation et livraison rapides',tr3:'Meilleurs prix',tr3d:'Prix compétitifs',tr4:'Support direct',tr4d:'WhatsApp et téléphone',
+  heroH:'Librairie, jeux et abonnements au même endroit',heroP:'Fournitures scolaires et de bureau, abonnements Netflix et Gemini, recharges de jeux, paiement de factures. Commandez ici, retirez en boutique ou recevez chez vous.',
+  cta1:'Commander',cta2:'Venir en boutique',catT:'Parcourir par catégorie',prod:'produits',digT:'Abonnements et recharges instantanées',digS:'Livrés après confirmation du paiement.',fromShop:'À la boutique',seeAll:'Tout voir',
+  howT:'Comment commander',s1:'Choisissez vos produits',s1d:'Ajoutez ce que vous voulez au panier.',s2:'Envoyez la commande',s2d:'WhatsApp s\'ouvre avec un message prêt, vous confirmez avec la librairie.',s3:'Payez et recevez',s3d:'À la livraison, ou par virement postal pour le numérique.',
+  visitT:'Venir en boutique',visitS:'Nous vous accueillons à Attatba.',gNight:'Façade de nuit',gDay:'Façade de jour',gIn:'À l\'intérieur',addrK:'Adresse',phoneK:'Téléphone',hoursK:'Horaires',emailK:'E-mail',map:'Ouvrir la carte',wa:'Écrire sur WhatsApp',copy:'Copier le texte',
+  shopS:'Tous les produits et services, classés par catégorie.',sortD:'Ordre par défaut',sortA:'Prix croissant',sortZ:'Prix décroissant',tAll:'Tous les types',tPhys:'Produits',tDig:'Numérique et services',
+  payMix:'Les produits de votre panier n\'ont pas de mode de paiement commun. Passez deux commandes séparées.',e_pay_mix:'Les produits de votre panier n\'ont pas de mode de paiement commun. Passez deux commandes séparées.',galT:'Galerie de la librairie',galS:'Photos et vidéo de la librairie Slimi.',vidL:'Vidéo de présentation',loadFail:'Impossible de charger la boutique.',loadFailS:'Vérifiez votre connexion internet puis réessayez.',retry:'Réessayer',qtyL:'Quantité',view:'Voir le panier',yourcart:'Votre panier',emptycart:'Le panier est vide.',remove:'Retirer',close:'Fermer',next:'Continuer',back:'Retour',
+  sub_t:'Sous-total',deliv:'Livraison',total:'Total',onreqnote:'Le prix des services sur demande sera ajouté.',
+  name:'Nom complet',phone:'Téléphone',wilaya:'Wilaya',pick:'Choisir la wilaya',addr:'Adresse',notes:'Remarque (facultatif)',
+  how:'Mode de retrait',home_d:'Livraison à domicile',pickup:'Retrait à la librairie',pickupd:'Sans frais de livraison',
+  pay:'Mode de paiement',cod:'Paiement à la livraison',codd:'Vous payez au livreur à la réception',transfer:'Virement postal (CCP / BaridiMob)',transferd:'Paiement avant traitement, envoi du reçu',
+  prepay:'Le panier contient des produits numériques ou des services : paiement d\'avance.',
+  ccpl:'Compte CCP / RIP',ccpnone:'Le vendeur vous enverra les coordonnées du compte sur WhatsApp.',
+  review:'Vérifier la commande',err_name:'Saisissez votre nom complet.',err_phone:'Saisissez un numéro algérien valide (ex. 0772 00 00 00).',err_wil:'Choisissez la wilaya.',err_addr:'Saisissez l\'adresse de livraison.',
+  ready:'Votre commande est prête',notsent:'La commande n\'est pas encore envoyée. Touchez le bouton ci-dessous pour ouvrir WhatsApp et l\'envoyer à la librairie.',sendwa:'Envoyer la commande sur WhatsApp',copied:'Copié',copyfail:'Copie impossible, sélectionnez le texte.',neworder:'Nouvelle commande',
+  added:'Ajouté au panier',feeAfter:'Selon la wilaya',free:'Gratuite',digInfo:'Livré en numérique après confirmation du paiement.',physInfo:'Disponible en livraison ou retrait en boutique.',
+  admin:'Tableau de bord',products:'Produits',settings:'Paramètres et identité',addp:'Ajouter un produit',edit:'Modifier',del:'Supprimer',confirmdel:'Confirmer la suppression',hide:'Masquer',show:'Afficher',
+  nameAr:'Nom en arabe',nameFr:'Nom en français',cat:'Catégorie',type:'Type',physical:'Produit physique (livraison)',digitalT:'Numérique / service (paiement d\'avance)',price:'Prix (DA)',old:'Ancien prix (facultatif)',pricehint:'Laissez 0 pour afficher « Prix sur demande ».',
+  avail:'Disponible à la vente',img:'Image',upload:'Téléverser une image',rmimg:'Retirer l\'image',savep:'Enregistrer le produit',cancel:'Annuler',
+  waN:'Numéro WhatsApp de la librairie (format international)',ccp:'Numéro de compte CCP / RIP',feeL:'Frais de livraison à Tipaza (DA)',feeO:'Frais de livraison autres wilayas (DA)',freeF:'Livraison gratuite à partir de (DA, 0 pour désactiver)',phoneN:'Téléphone affiché sur la page',emailN:'E-mail',hoursN:'Horaires (facultatif)',
+  brand:'Identité et images',logoN:'Logo',facN:'Photo de la façade (accueil)',fac2N:'Photo de la façade de jour',noassets:'Le téléversement est réservé au compte propriétaire.',
+  stP:'Produits',stV:'Visibles',stH:'Masqués',stD:'Numérique et services',
+  pubn:'Publier les modifications',discard:'Annuler les modifications',pending:'Modifications non publiées',published:'Publié',pubfail:'Échec de la publication.',notwriter:'Vous n\'avez pas le droit de publier.',
+  demo:'Les prix actuels sont des exemples. Modifiez-les puis touchez « Confirmer les prix » avant de partager le lien.',confirmdemo:'Confirmer les prix',goshop:'Voir la boutique',
+  nopermit:'Cette page est réservée au propriétaire.',lang:'العربية',online:'Paiement en ligne (CIB / Edahabia)',onlined:'Vous payez maintenant en toute sécurité via la passerelle',payNow:'Payer maintenant',payFail:'Impossible d\'ouvrir la page de paiement. Réessayez depuis le suivi de commande.',refL:'Numéro de ligne ou de contrat (téléphone, électricité, eau)',err_ref:'Saisissez le numéro de ligne ou de contrat.',delInfo:'Informations de livraison',paidBack:'Merci, le paiement est en cours de confirmation. Saisissez votre téléphone pour suivre la commande.',failBack:'Le paiement n\'a pas abouti. Vous pouvez réessayer ici.',track:'Suivre ma commande',trackT:'Suivre ma commande',trackS:'Saisissez le numéro de commande et votre téléphone.',trackGo:'Suivre',ordNo:'Numéro de commande',ordDone:'Commande enregistrée',ordKeep:'Gardez ce numéro pour suivre votre commande. Envoyez-la maintenant à la librairie sur WhatsApp pour la confirmer.',sendProof:'Envoyer la preuve de paiement',proofHint:'Après le virement, envoyez la photo du reçu ici ou sur WhatsApp.',proofOk:'Preuve envoyée, nous la vérifions bientôt.',proofFail:'Envoi impossible. Utilisez une image ou un PDF de moins de 2 Mo.',trackOrder:'Suivre la commande',notFound:'Aucune commande trouvée. Vérifiez le numéro et le téléphone.',err_net:'Envoi impossible. Vérifiez la connexion et réessayez.',st_new:'Nouvelle',st_confirmed:'Confirmée',st_preparing:'En préparation',st_shipped:'En route',st_delivered:'Livrée',st_cancelled:'Annulée',pay_unpaid:'Non payée',pay_proof_sent:'Preuve envoyée',pay_paid:'Payée',pay_refunded:'Remboursée',ordNum:'N° de commande',payS:'Paiement',orderT:'Nouvelle commande - Librairie Slimi',
+  f_name:'Nom',f_phone:'Téléphone',f_wil:'Wilaya',f_addr:'Adresse',f_how:'Retrait',f_pay:'Paiement',f_note:'Remarque',f_tot:'Total',f_sub:'Sous-total',f_del:'Livraison',f_onreq:'Prix des services sur demande',da:'DA',libr:'Librairie',slimi:'Slimi'}
+};
+
+var S={cust:null,authTab:'in',authErr:'',lang:'ar',route:'home',cat:'all',q:'',type:'all',sort:'def',cart:{},sheet:null,pid:null,order:null,track:null,
+ form:{name:'',phone:'',wilaya:'',addr:'',note:'',delivery:'home',pay:'cod',ref:''},banner:'',err:[],msg:'',
+ tab:'products',draft:null,dirty:false,editing:null,confirmDel:null};
+try{var l0=localStorage.getItem('slimi-lang');if(l0==='fr'||l0==='ar')S.lang=l0}catch(e){}
+try{var c0=JSON.parse(localStorage.getItem('slimi-cart')||'{}');if(c0&&typeof c0==='object')S.cart=c0}catch(e){}
+
+function t(k){return TX[S.lang][k]||TX.ar[k]||k}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function fmt(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' '+t('da')}
+function pname(p){return p.name[S.lang]||p.name.ar||p.name.fr||''}
+function catOf(id){return CATS.filter(function(c){return c.id===id})[0]||CATS[0]}
+function find(id,src){var a=(src||DATA).products;for(var i=0;i<a.length;i++)if(a[i].id===id)return a[i];return null}
+function saveCart(){try{localStorage.setItem('slimi-cart',JSON.stringify(S.cart))}catch(e){}}
+function toast(m){var el=document.getElementById('toast');if(el)el.innerHTML='<span>'+esc(m)+'</span>';clearTimeout(toast._t);toast._t=setTimeout(function(){var e=document.getElementById('toast');if(e)e.innerHTML=''},2200)}
+function setDir(){var r=document.documentElement;r.lang=S.lang;r.dir=S.lang==='ar'?'rtl':'ltr'}
+function nav(h){S.hv=h;try{if(location.hash.replace('#','')!==h)location.hash=h}catch(e){}S.route=routeNow();S.confirmDel=null;drawNav();drawPage();try{window.scrollTo(0,0)}catch(e){}}
+function routeNow(){var h=(S.hv!=null?S.hv:location.hash.replace('#',''));if(h.indexOf('product/')===0){S.pid=h.slice(8);return 'product'}return(['shop','visit','track','subs','bills','offers','about','contact','login','account','terms','privacy','returns','faq'].indexOf(h)>-1)?h:'home'}
+function cfg(){return DATA.settings}
+function shown(){return DATA.products.filter(function(p){return p.avail})}
+function cnt(c){return shown().filter(function(p){return p.cat===c}).length}
+
+function logo(big){
+ var s=cfg();
+ var mark=s.logo?'<img src="'+esc(s.logo)+'" alt="">':ic('book',28);
+ return '<span class="logo'+(big?' big':'')+'"><span class="mark">'+mark+'</span><span class="lt"><small>'+esc(t('libr'))+'</small><b>'+esc(t('slimi'))+'</b></span></span>';
+}
+function tile(p){
+ var c=catOf(p.cat);
+ var inner=p.img?'<img src="'+esc(p.img)+'" alt="">':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+GLYPH[p.cat]+'</svg>';
+ return '<div class="tile" style="--cat:var(--c-'+esc(c.id)+')">'+inner+(p.type==='digital'?'<span class="tag glass">'+esc(t('digital'))+'</span>':'')+'</div>';
+}
+function priceHtml(p){
+ if(!(p.price>0))return '<span class="pp"><small>'+esc(t('onreq'))+'</small></span>';
+ return '<span class="pp num">'+esc(fmt(p.price))+(p.old>p.price?'<s>'+esc(fmt(p.old))+'</s>':'')+'</span>';
+}
+function card(p){
+ return '<article class="pc glass"><button class="pcm" data-act="open" data-id="'+esc(p.id)+'">'+tile(p)+'<span class="pi"><span class="pn">'+esc(pname(p))+'</span>'+priceHtml(p)+'</span></button>'+
+ '<button class="addb" data-act="add" data-id="'+esc(p.id)+'" aria-label="'+esc(t('add'))+'">'+ic('plus',20)+'</button></article>';
+}
+
+/* ---------- shell ---------- */
+function drawShell(){
+ setDir();
+ app.innerHTML=''+
+ '<div class="ambient" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div><div class="wrap"><div id="nav"></div><main id="page"></main></div><div id="tabs"></div><div id="layer"></div><div class="toast" id="toast" role="status"></div>';
+ drawNav();drawPage();drawLayer();
+}
+function nav1(r,label){return '<a href="#'+(r==='home'?'home':r)+'"'+(S.route===r?' aria-current="page"':'')+'>'+esc(label)+'</a>'}
+function drawNav(){
+ var n=document.getElementById('nav'),tb=document.getElementById('tabs');if(!n)return;var s=cfg();
+ var R=['home','subs','bills','shop','offers','about','contact'];
+ n.innerHTML='<div class="util"><span>'+esc(t('utilL'))+'</span><a href="tel:'+esc(String(s.phone).replace(/\s/g,''))+'" dir="ltr">'+esc(s.phone)+'</a></div>'+
+ '<nav class="nav glass" aria-label="'+esc(t('shop'))+'"><a class="logo" href="#home" aria-label="'+esc(t('home'))+'">'+logo(false)+'</a><div class="nl">'+R.map(function(r){return nav1(r,t('n_'+r))}).join('')+'</div><span class="sp"></span>'+
+ '<div class="nsearch"><input id="hq" type="search" placeholder="'+esc(t('hsearch'))+'" aria-label="'+esc(t('hsearch'))+'"><button data-act="hsearch" aria-label="'+esc(t('search'))+'">'+ic('search',18)+'</button></div>'+
+ '<button class="ib" data-act="lang">'+esc(t('lang'))+'</button><a class="ib acc" href="#'+(S.cust?'account':'login')+'" aria-label="'+esc(t(S.cust?'n_account':'n_login'))+'">'+ic('user',20)+'<span class="an">'+esc(S.cust?S.cust.name.split(' ')[0]:t('n_login'))+'</span></a><button class="ib" data-act="openCart" aria-label="'+esc(t('cart'))+'">'+ic('bag',22)+'<span class="cbadge" hidden></span></button></nav>';
+ function tab(r,ico,label){return '<a class="tab" href="#'+r+'"'+(S.route===r?' aria-current="page"':'')+'>'+ic(ico,22)+'<span>'+esc(label)+'</span></a>'}
+ tb.innerHTML='<div class="tabbar glass">'+tab('home','home',t('n_home'))+tab('shop','shop',t('n_shop'))+tab('bills','doc',t('n_bills'))+tab(S.cust?'account':'login','user',S.cust?t('n_account'):t('n_login'))+
+ '<button class="tab" data-act="openCart">'+ic('bag',22)+'<span>'+esc(t('cart'))+'</span><span class="cbadge" hidden></span></button></div>';
+ drawBadge();
+}
+function setCust(c){S.cust=c;if(c){S.form.name=S.form.name||c.name;S.form.phone=S.form.phone||c.phone}}
+function cartCount(){var n=0;for(var k in S.cart){if(find(k))n+=S.cart[k]}return n}
+function drawBadge(){var n=cartCount();document.querySelectorAll('.cbadge').forEach(function(b){b.textContent=n;b.hidden=!n})}
+
+function drawPage(){
+ var el=document.getElementById('page');if(!el)return;var P=shown();
+ if(S.route==='track'){el.innerHTML=trackHtml();return}
+ if(S.route==='login'){if(S.cust){nav('account');return}el.innerHTML=loginHtml();return}
+ if(S.route==='account'){if(!S.cust){nav('login');return}el.innerHTML=accountHtml();loadMyOrders();return}
+ if(S.route==='product'){el.innerHTML=productHtml();var pp=find(S.pid);if(pp)fill('rel',P.filter(function(x){return x.cat===pp.cat&&x.id!==pp.id}).slice(0,4));return}
+ if(LEG[S.route]){el.innerHTML=legalHtml(S.route);return}
+ if(S.route==='shop'){el.innerHTML=shopHtml();drawChips();drawTypes();drawGrid();return}
+ if(S.route==='visit'){el.innerHTML=visitHtml();return}
+ if(S.route==='subs'){el.innerHTML=ph(t('subsT'),t('subsS'),'subs')+lsec(t('appsH'),'gs1')+lsec(t('gamesH'),'gs2')+foot();fill('gs1',P.filter(function(p){return p.cat==='apps'}));fill('gs2',P.filter(function(p){return p.cat==='games'}));return}
+ if(S.route==='bills'){el.innerHTML=ph(t('billsT'),t('billsS'),'bills')+'<div class="steps">'+[1,2,3].map(function(i){return '<div class="st glass"><span class="n">'+i+'</span><b>'+esc(t('bs'+i))+'</b><p>'+esc(t('bs'+i+'d'))+'</p></div>'}).join('')+'</div>'+lsec(t('svcB'),'gb')+foot();fill('gb',P.filter(function(p){return p.cat==='services'}));return}
+ if(S.route==='offers'){el.innerHTML=ph(t('offT'),t('offS'))+'<div class="grid" id="go"></div>'+foot();var O=P.filter(function(p){return p.old>p.price&&p.price>0});if(O.length)fill('go',O);else document.getElementById('go').innerHTML='<div class="empty">'+esc(t('offNone'))+'</div>';return}
+ if(S.route==='about'){el.innerHTML=ph(t('abT'),t('abS'))+'<div class="about glass"><p>'+esc(t('abP'))+'</p></div><div class="steps">'+[1,2,3].map(function(i){return '<div class="st glass"><span class="n">'+ic(['shield','bolt','pin'][i-1],18)+'</span><b>'+esc(t('av'+i))+'</b><p>'+esc(t('av'+i+'d'))+'</p></div>'}).join('')+'</div><section class="sec">'+visitBody()+'</section>'+foot();return}
+ if(S.route==='contact'){el.innerHTML=ph(t('ctT'),t('ctS'))+'<div class="cform glass"><label>'+esc(t('ctName'))+'<input id="c-name" class="inp" autocomplete="name"></label><label>'+esc(t('ctMsg'))+'<textarea id="c-msg" class="inp" rows="4"></textarea></label><button class="btn primary" data-act="wasend">'+esc(t('ctSend'))+'</button></div><section class="sec">'+visitBody()+'</section>'+foot();return}
+ el.innerHTML=homeHtml();fill('hgrid',P.slice(0,8));var hg=document.getElementById('hgrid');if(!P.length){if(hg&&hg.parentNode)hg.parentNode.hidden=true}else if(hg&&!P[0].img)hg.classList.add('flat')
+}
+
+function loginHtml(){
+ var reg=S.authTab==='up';
+ return ph(t('lgT'),t('lgS'))+'<div class="cform glass"><div class="seg"><button class="chip" data-act="authTab" data-id="in" aria-pressed="'+(!reg)+'">'+esc(t('tabIn'))+'</button><button class="chip" data-act="authTab" data-id="up" aria-pressed="'+reg+'">'+esc(t('tabReg'))+'</button></div>'+
+ (reg?'<label>'+esc(t('lgName'))+'<input id="a-name" class="inp" autocomplete="name"></label>':'')+
+ '<label>'+esc(t('lgPhone'))+'<input id="a-phone" class="inp num" dir="ltr" type="tel" inputmode="tel" autocomplete="tel" placeholder="0661234567"></label>'+
+ (reg?'<label>'+esc(t('lgMail'))+'<input id="a-mail" class="inp" dir="ltr" type="email" autocomplete="email"></label>':'')+
+ '<label>'+esc(t('lgPw'))+'<input id="a-pw" class="inp" dir="ltr" type="password" autocomplete="'+(reg?'new-password':'current-password')+'"></label>'+
+ '<div class="note warn" id="a-err" role="alert"'+(S.authErr?'':' hidden')+'>'+esc(S.authErr)+'</div>'+
+ '<button class="btn primary" data-act="'+(reg?'doReg':'doLogin')+'">'+esc(t(reg?'lgReg':'lgIn'))+'</button></div>'+foot();
+}
+function accountHtml(){
+ var c=S.cust;
+ return ph(t('acHi')+' '+c.name,c.phone)+'<div class="cta" style="margin-bottom:14px"><a class="btn primary" href="#shop">'+esc(t('n_shop'))+'</a><button class="btn" data-act="doLogout">'+esc(t('acOut'))+'</button></div><section class="sec" style="margin-top:8px"><div class="sh"><h2>'+esc(t('acOrders'))+'</h2></div><div id="myo" class="olist"></div></section>'+foot();
+}
+function loadMyOrders(){
+ api('/api/c/orders').then(function(L){S.myOrders=L;drawMyOrders()}).catch(function(e){if(e&&e.error==='auth'){S.cust=null;drawNav();nav('login')}});
+}
+function drawMyOrders(){
+ var el=document.getElementById('myo');if(!el)return;var L=S.myOrders||[];
+ if(!L.length){el.innerHTML='<div class="empty">'+esc(t('acNone'))+'</div>';return}
+ el.innerHTML=L.map(function(o){
+  var items=o.items.map(function(l){return (S.lang==='fr'?l.name_fr:l.name_ar)+' ×'+l.q}).join('، ');
+  return '<article class="oc glass"><div class="oh"><b class="num" dir="ltr">'+esc(o.number)+'</b><span class="chip st-'+esc(o.status)+'">'+esc(t('st_'+o.status))+'</span></div><div class="om">'+esc(fmtDate(o.created))+' · '+esc(t('pay_'+o.pay_status))+'</div><p class="oi">'+esc(items)+'</p>'+
+  (o.delivery_info?'<div class="note"><b>'+esc(t('acDeliv'))+'</b><br>'+esc(o.delivery_info).replace(/\n/g,'<br>')+'</div>':'')+
+  '<div class="of"><b class="num">'+esc(fmt(o.total))+'</b><button class="btn sm" data-act="trackNo" data-id="'+esc(o.number)+'">'+esc(t('acTrack'))+'</button></div></article>';
+ }).join('');
+}
+function productHtml(){
+ var p=find(S.pid),s=cfg();
+ if(!p)return ph(t('pdMissing'),'')+'<a class="btn primary" href="#shop">'+esc(t('pdBack'))+'</a>'+foot();
+ var wa='https://wa.me/'+String(s.whatsapp).replace(/\D/g,'')+'?text='+encodeURIComponent(pname(p)),d=(p.desc&&(p.desc[S.lang]||p.desc.ar))||'';
+ var c=catOf(p.cat);
+ return '<nav class="crumb"><a href="#home">'+esc(t('n_home'))+'</a><span>/</span><a href="#shop">'+esc(t('pdBack'))+'</a><span>/</span><span>'+esc(c[S.lang])+'</span></nav>'+
+ '<div class="pdp"><div class="pdp-i">'+tile(p)+'</div><div class="pdp-b glass"><h1>'+esc(pname(p))+'</h1><div class="pdp-p">'+priceHtml(p)+'</div>'+
+ '<p class="pdp-n">'+esc(t(p.type==='digital'?'pdDigital':'pdPhysical'))+'</p>'+
+ (d?'<h3>'+esc(t('pdAbout'))+'</h3><p class="pdp-d">'+esc(d)+'</p>':'')+
+ '<div class="pdp-q"><span class="lab">'+esc(t('qtyL'))+'</span><div class="stepper"><button data-act="pqm" aria-label="-">&minus;</button><span class="num" id="pq">1</span><button data-act="pqp" aria-label="+">+</button></div></div><div class="cta"><button class="btn primary" data-act="add" data-q="pq" data-id="'+esc(p.id)+'">'+esc(t('pdAdd'))+'</button><a class="btn" href="'+esc(wa)+'" target="_blank" rel="noopener">'+esc(t('pdAsk'))+'</a></div></div></div>'+
+ '<section class="sec"><div class="sh"><h2>'+esc(t('pdRel'))+'</h2></div><div class="grid" id="rel"></div></section>'+foot();
+}
+var LEG={
+ terms:{ar:['شروط الاستخدام',['باستخدامك هذا الموقع وإتمامك طلباً فيه فأنت توافق على هذه الشروط.','الأسعار بالدينار الجزائري وقد تتغير دون إشعار مسبق. السعر المعتمد هو المعروض وقت تأكيد الطلب.','يُعدّ الطلب مؤكداً عندما نتصل بك أو نراسلك لتأكيده. نحتفظ بحق رفض أي طلب أو إلغائه عند عدم توفر المنتج أو الخدمة.','طرق الدفع: الدفع عند الاستلام، أو التحويل (CCP / بريدي موب) مع إرسال إثبات الدفع، أو الدفع الإلكتروني عند تفعيله.','الخدمات الرقمية (الاشتراكات، الشحن، دفع الفواتير) تُنفَّذ بعد تأكيد الدفع، وتصلك بياناتها في صفحة تتبع الطلب.','عليك إدخال بيانات صحيحة (الهاتف، رقم الخط أو العقد). لسنا مسؤولين عن خطأ سببته بيانات خاطئة.']],
+  fr:['Conditions d\'utilisation',['En utilisant ce site et en passant commande, vous acceptez ces conditions.','Les prix sont en dinars algériens et peuvent changer sans préavis. Le prix retenu est celui affiché au moment de la confirmation.','Une commande est confirmée lorsque nous vous appelons ou vous écrivons pour la valider. Nous pouvons refuser ou annuler une commande si le produit ou le service n\'est pas disponible.','Paiement : à la livraison, par virement (CCP / BaridiMob) avec envoi de la preuve, ou en ligne lorsqu\'il est activé.','Les services numériques (abonnements, recharges, factures) sont exécutés après confirmation du paiement ; les accès sont dans le suivi de commande.','Vous devez saisir des informations exactes (téléphone, numéro de ligne ou de contrat). Nous ne sommes pas responsables d\'une erreur due à des données erronées.']]},
+ privacy:{ar:['الخصوصية',['نجمع الاسم ورقم الهاتف والعنوان وبيانات الطلب فقط لتنفيذ طلبك والتواصل معك.','لا نبيع بياناتك ولا نشاركها مع أحد إلا بالقدر اللازم لتنفيذ الطلب (مثل شركة التوصيل أو بوابة الدفع).','كلمات السر تُخزَّن مشفّرة ولا نستطيع قراءتها.','صور إثبات الدفع يراها فريق المكتبة المخوَّل فقط.','لطلب تعديل بياناتك أو حذفها تواصل معنا بالهاتف أو واتساب.']],
+  fr:['Confidentialité',['Nous collectons le nom, le téléphone, l\'adresse et les données de commande uniquement pour traiter votre commande et vous contacter.','Nous ne vendons pas vos données et ne les partageons que dans la mesure nécessaire (livreur, passerelle de paiement).','Les mots de passe sont stockés chiffrés et nous ne pouvons pas les lire.','Les preuves de paiement ne sont visibles que par l\'équipe autorisée.','Pour modifier ou supprimer vos données, contactez-nous par téléphone ou WhatsApp.']]},
+ returns:{ar:['الإرجاع والاستبدال',['المنتجات المادية: الإرجاع أو الاستبدال خلال 3 أيام من الاستلام، بشرط أن تكون بحالتها الأصلية وغير مستعملة.','المنتجات الرقمية (الاشتراكات، شحن الألعاب، دفع الفواتير): لا تُسترد بعد تنفيذها لأنها تُسلَّم فوراً. إن تعذّر التنفيذ نعيد لك المبلغ كاملاً.','إن وصلك منتج تالف أو مختلف عن طلبك فتواصل معنا فوراً ونصحّح الأمر.','تواصل معنا بالهاتف أو واتساب ومعك رقم الطلب.']],
+  fr:['Retours et échanges',['Produits physiques : retour ou échange sous 3 jours après réception, en état d\'origine et non utilisés.','Produits numériques (abonnements, recharges, factures) : non remboursables après exécution car livrés immédiatement. Si l\'exécution échoue, nous remboursons intégralement.','Si un produit arrive endommagé ou différent de votre commande, contactez-nous tout de suite.','Contactez-nous par téléphone ou WhatsApp avec votre numéro de commande.']]},
+ faq:{ar:['أسئلة شائعة',[['كيف أتتبع طلبي؟','أدخل رقم الطلب ورقم هاتفك في صفحة «تتبع طلبك»، أو ادخل إلى حسابك لترى كل طلباتك.'],['متى أستلم الاشتراك أو الشحن؟','بعد تأكيد الدفع وفي أقرب وقت. تظهر بياناته في صفحة تتبع الطلب.'],['كيف أدفع فاتورة؟','اختر خدمة دفع الفواتير، وأدخل رقم الخط أو العقد، ثم أكمل الطلب.'],['هل أستلم من المحل؟','نعم، اختر «استلام من المحل» عند إتمام الطلب.'],['كيف أرسل إثبات التحويل؟','بعد إتمام الطلب ارفع صورة الإيصال من نافذة الطلب أو من صفحة التتبع.'],['كم رسوم التوصيل؟','__FEES__']]],
+  fr:['FAQ',[['Comment suivre ma commande ?','Saisissez le numéro de commande et votre téléphone dans « Suivre ma commande », ou connectez-vous à votre compte.'],['Quand reçois-je mon abonnement ou ma recharge ?','Après confirmation du paiement, au plus vite. Les accès apparaissent dans le suivi de commande.'],['Comment payer une facture ?','Choisissez le paiement de factures, saisissez le numéro de ligne ou de contrat, puis finalisez la commande.'],['Puis-je retirer en boutique ?','Oui, choisissez « Retrait en boutique » à la commande.'],['Comment envoyer la preuve de virement ?','Après la commande, envoyez la photo du reçu depuis la fenêtre de commande ou le suivi.'],['Quels sont les frais de livraison ?','__FEES__']]]}
+};
+function legalHtml(k){
+ var L=LEG[k][S.lang]||LEG[k].ar,s=cfg(),h=ph(L[0],'');
+ if(k==='faq'){
+  var fees=S.lang==='fr'?('Dans la wilaya : '+fmt(s.feeLocal)+', ailleurs : '+fmt(s.feeOther)+'. Livraison gratuite dès '+fmt(s.freeFrom)+'.'):('داخل الولاية '+fmt(s.feeLocal)+'، وخارجها '+fmt(s.feeOther)+'. التوصيل مجاني بدءاً من '+fmt(s.freeFrom)+'.');
+  h+='<div class="legal">'+L[1].map(function(q){return '<details class="glass"><summary>'+esc(q[0])+'</summary><p>'+esc(q[1]==='__FEES__'?fees:q[1])+'</p></details>'}).join('')+'</div>';
+ }else h+='<div class="legal glass">'+L[1].map(function(x){return '<p>'+esc(x)+'</p>'}).join('')+'</div>';
+ return h+foot();
+}
+var SVC_ART={
+subs:'<rect width="480" height="300" fill="#1D47C8"/><circle cx="48" cy="40" r="26" fill="#26C5D8"/><circle cx="440" cy="270" r="30" fill="#26C5D8"/><rect x="170" y="20" width="140" height="260" rx="28" fill="#0E2257"/><rect x="180" y="36" width="120" height="228" rx="18" fill="#FAF7EE"/><rect x="224" y="25" width="32" height="6" rx="3" fill="#1F4FD8"/><rect x="190" y="52" width="46" height="46" rx="12" fill="#1F4FD8"/><polygon points="206,66 206,84 222,75" fill="#FFD21F"/><rect x="244" y="52" width="46" height="46" rx="12" fill="#26C5D8"/><circle cx="262" cy="84" r="5" fill="#0E2257"/><rect x="265" y="62" width="3.5" height="22" fill="#0E2257"/><path d="M268.5 62 l9 4 v6 l-9-4z" fill="#0E2257"/><rect x="190" y="108" width="46" height="46" rx="12" fill="#FFD21F"/><rect x="200" y="120" width="26" height="19" rx="6" fill="#0E2257"/><polygon points="206,138 206,147 214,138" fill="#0E2257"/><rect x="244" y="108" width="46" height="46" rx="12" fill="#0E2257"/><circle cx="259" cy="134" r="7" fill="#FFD21F"/><circle cx="269" cy="128" r="9" fill="#FFD21F"/><circle cx="279" cy="135" r="6" fill="#FFD21F"/><rect x="257" y="134" width="24" height="7" rx="3" fill="#FFD21F"/><rect x="190" y="164" width="46" height="46" rx="12" fill="#0E2257"/><path d="M213 174 L227 180 V192 C227 201 220 206 213 209 C206 206 199 201 199 192 V180Z" fill="#FAF7EE"/><polyline points="206,192 211,197 220,186" fill="none" stroke="#1F4FD8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="244" y="164" width="46" height="46" rx="12" fill="#26C5D8"/><polygon points="267,176 287,186 267,196 247,186" fill="#0E2257"/><path d="M257 192 v8 c6 5 14 5 20 0 v-8 l-10 5z" fill="#0E2257"/><rect x="190" y="220" width="100" height="30" rx="15" fill="#FFD21F"/><rect x="204" y="231" width="50" height="8" rx="4" fill="#0E2257"/><circle cx="272" cy="235" r="7" fill="#0E2257"/><circle cx="396" cy="92" r="46" fill="#FFD21F"/><path d="M372 112 L376 82 L388 98 L396 76 L404 98 L416 82 L420 112Z" fill="#0E2257"/><rect x="372" y="115" width="48" height="9" rx="3" fill="#0E2257"/><rect x="34" y="150" width="110" height="104" rx="16" fill="#FAF7EE"/><path d="M34 166 a16 16 0 0 1 16-16 h78 a16 16 0 0 1 16 16 v14 h-110z" fill="#FFD21F"/><circle cx="64" cy="150" r="6" fill="#0E2257"/><circle cx="114" cy="150" r="6" fill="#0E2257"/><g fill="#C9D3F5"><circle cx="58" cy="200" r="6"/><circle cx="89" cy="200" r="6"/><circle cx="120" cy="200" r="6"/><circle cx="58" cy="226" r="6"/><circle cx="89" cy="226" r="6"/></g><circle cx="120" cy="226" r="9" fill="#1F4FD8"/><polyline points="115,226 119,230 126,221" fill="none" stroke="#FFD21F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M396 190 a30 30 0 1 1 -28 20" fill="none" stroke="#FAF7EE" stroke-width="9" stroke-linecap="round"/><polygon points="356,196 380,200 366,222" fill="#FAF7EE"/>',
+games:'<rect width="480" height="300" fill="#26C5D8"/><circle cx="70" cy="240" r="34" fill="#FFD21F"/><circle cx="422" cy="62" r="26" fill="#1D47C8"/><rect x="100" y="96" width="280" height="130" rx="65" fill="#0E2257"/><rect x="146" y="148" width="48" height="13" rx="3" fill="#FAF7EE"/><rect x="164" y="130" width="13" height="49" rx="3" fill="#FAF7EE"/><circle cx="318" cy="136" r="13" fill="#FFD21F"/><circle cx="350" cy="162" r="13" fill="#26C5D8"/><circle cx="286" cy="162" r="13" fill="#FAF7EE"/><circle cx="318" cy="188" r="13" fill="#1F4FD8"/><rect x="216" y="150" width="48" height="9" rx="4" fill="#1F4FD8"/><polygon points="420,150 440,150 450,166 430,190 410,166" fill="#FAF7EE"/><polygon points="420,150 430,190 410,166" fill="#C9D3F5"/><circle cx="52" cy="120" r="20" fill="#FFD21F"/><circle cx="52" cy="120" r="12" fill="none" stroke="#0E2257" stroke-width="4"/><g transform="rotate(-12 72 66)"><rect x="40" y="46" width="64" height="40" rx="8" fill="#FAF7EE"/><rect x="40" y="56" width="64" height="9" fill="#1F4FD8"/></g>',
+bills:'<rect width="480" height="300" fill="#FFD21F"/><circle cx="72" cy="64" r="30" fill="#FAF7EE"/><circle cx="430" cy="250" r="30" fill="#1D47C8"/><g transform="rotate(10 360 170)"><rect x="296" y="124" width="140" height="90" rx="14" fill="#1D47C8"/><rect x="296" y="144" width="140" height="18" fill="#0E2257"/><rect x="310" y="182" width="48" height="10" rx="5" fill="#FAF7EE"/></g><polygon points="140,34 320,34 320,262 300,250 280,262 260,250 240,262 220,250 200,262 180,250 160,262 140,250" fill="#FAF7EE"/><rect x="166" y="66" width="128" height="12" rx="6" fill="#0E2257"/><rect x="166" y="94" width="96" height="10" rx="5" fill="#C9D3F5"/><rect x="166" y="118" width="112" height="10" rx="5" fill="#C9D3F5"/><rect x="166" y="170" width="128" height="30" rx="9" fill="#1D47C8"/><polygon points="186,175 176,188 184,188 180,196 192,182 184,182" fill="#FFD21F"/><path d="M214 174 c6 8 9 12 9 16 a9 9 0 0 1 -18 0 c0 -4 3 -8 9 -16z" fill="#26C5D8"/><circle cx="190" cy="228" r="9" fill="#26C5D8"/><polyline points="185,228 189,232 196,223" fill="none" stroke="#0E2257" stroke-width="3" stroke-linecap="round"/>',
+shop:'<rect width="480" height="300" fill="#1D47C8"/><circle cx="70" cy="250" r="30" fill="#26C5D8"/><circle cx="430" cy="56" r="26" fill="#FFD21F"/><rect x="104" y="48" width="180" height="204" rx="16" fill="#FAF7EE"/><g fill="#1D47C8"><circle cx="104" cy="82" r="7"/><circle cx="104" cy="114" r="7"/><circle cx="104" cy="146" r="7"/><circle cx="104" cy="178" r="7"/><circle cx="104" cy="210" r="7"/></g><rect x="140" y="84" width="110" height="10" rx="5" fill="#0E2257"/><rect x="140" y="112" width="130" height="8" rx="4" fill="#C9D3F5"/><rect x="140" y="134" width="120" height="8" rx="4" fill="#C9D3F5"/><rect x="140" y="156" width="90" height="8" rx="4" fill="#C9D3F5"/><g transform="rotate(16 330 150)"><rect x="318" y="40" width="26" height="176" rx="4" fill="#FFD21F"/><rect x="318" y="40" width="26" height="24" rx="4" fill="#26C5D8"/><polygon points="318,216 344,216 331,250" fill="#FAF7EE"/><polygon points="325,236 337,236 331,250" fill="#0E2257"/></g><rect x="372" y="64" width="28" height="170" rx="4" fill="#26C5D8"/><g fill="#0E2257"><rect x="372" y="84" width="14" height="3"/><rect x="372" y="104" width="14" height="3"/><rect x="372" y="124" width="14" height="3"/><rect x="372" y="144" width="14" height="3"/><rect x="372" y="164" width="14" height="3"/><rect x="372" y="184" width="14" height="3"/></g>'
+};
+function svcImg(k){var s=cfg();if(s['svc_'+k])return s['svc_'+k];return 'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 300" preserveAspectRatio="xMidYMid slice">'+SVC_ART[k]+'</svg>')}
+function ph(a,b,k){if(k)return '<div class="pagehead has-img"><div><h1>'+esc(a)+'</h1><p>'+esc(b)+'</p></div><img src="'+esc(svcImg(k))+'" alt=""></div>';return '<div class="pagehead"><h1>'+esc(a)+'</h1><p>'+esc(b)+'</p></div>'}
+function lsec(a,id){return '<section class="sec"><div class="sh"><h2>'+esc(a)+'</h2></div><div class="grid" id="'+id+'"></div></section>'}
+function fill(id,list){
+ var el=document.getElementById(id);if(!el)return;
+ el.innerHTML=list.length?list.map(card).join(''):'<div class="empty">'+esc(t('none'))+'</div>';
+}
+var TRUST=[['shield','tr1','tr1d'],['bolt','tr2','tr2d'],['tag','tr3','tr3d'],['chat','tr4','tr4d']];
+function mediaHtml(){
+ var s=cfg(),G=(s.gallery||[]).filter(Boolean),V=s.vid;if(!V&&!G.length)return '';
+ var P=G.map(function(u,i){return '<button class="mp" data-act="zoom" data-id="'+esc(u)+'" aria-label="'+esc(t('galT'))+' '+(i+1)+'"><img src="'+esc(u)+'" alt="" loading="lazy"></button>'}).join('');
+ var VF=V?'<figure class="mv"><video src="'+esc(V)+'#t=0.1" controls playsinline preload="metadata" aria-label="'+esc(t('vidL'))+'"></video></figure>':'';
+ var body=V&&G.length<4?'<div class="mfew">'+VF+(G.length?'<div class="mg2" style="grid-template-columns:repeat('+G.length+',minmax(0,1fr))">'+P+'</div>':'')+'</div>':'<div class="mg">'+VF+P+'</div>';
+ return '<section class="sec"><div class="sh"><div><h2>'+esc(t('galT'))+'</h2><p>'+esc(t('galS'))+'</p></div></div>'+body+'</section>';
+}
+function homeHtml(){
+ var s=cfg(),h='';
+ h+='<section class="hero"><div class="hero-t"><h1>'+esc(t('heroH'))+'</h1><p>'+esc(t('heroP'))+'</p><div class="cta"><a class="btn primary" href="#shop">'+esc(t('cta1'))+'</a><a class="btn link" href="#visit">'+esc(t('cta2'))+'</a></div></div><figure class="hero-f"><img src="'+esc(s.facade)+'" alt="'+esc(t('gNight'))+'"><figcaption>'+esc(s.address[S.lang]||s.address.ar)+'</figcaption></figure></section>';
+ var SV=[['subs','subs','svcA','svcAd'],['subs','games','svcG','svcGd'],['bills','bills','svcB','svcBd'],['shop','shop','svcS','svcSd']];
+ h+='<section class="sec"><div class="sh"><h2>'+esc(t('svcT'))+'</h2></div><div class="svcs">'+SV.map(function(a){return '<a class="svc" href="#'+a[0]+'"><span class="svi"><img src="'+esc(svcImg(a[1]))+'" alt="" loading="lazy"></span><span class="svb"><b>'+esc(t(a[2]))+'</b><span class="s">'+esc(t(a[3]))+'</span><span class="go">'+esc(t('orderNow'))+'</span></span></a>'}).join('')+'</div></section>';
+ h+=mediaHtml();
+ h+='<div class="trust">'+TRUST.map(function(a){return '<div class="glass"><span class="ti">'+ic(a[0],20)+'</span><span><b>'+esc(t(a[1]))+'</b><span class="s">'+esc(t(a[2]))+'</span></span></div>'}).join('')+'</div>';
+ h+='<section class="sec"><div class="sh"><h2>'+esc(t('popT'))+'</h2><a href="#shop">'+esc(t('seeAll'))+'</a></div><div class="grid" id="hgrid"></div></section>';
+ var dig=shown().filter(function(p){return p.type==='digital'&&p.img});
+ if(dig.length)h+='<section class="sec"><div class="sh"><div><h2>'+esc(t('digT'))+'</h2><p>'+esc(t('digS'))+'</p></div></div><div class="strip">'+dig.map(function(p){
+  return '<button class="pz" data-act="open" data-id="'+esc(p.id)+'"><img src="'+esc(p.img)+'" alt=""><span class="in glass"><b>'+esc(pname(p))+'</b><span class="num">'+(p.price>0?esc(fmt(p.price)):esc(t('onreq')))+'</span></span></button>';
+ }).join('')+'</div></section>';
+ h+='<section class="sec"><div class="sh"><h2>'+esc(t('howT'))+'</h2></div><div class="steps">'+
+ [['s1','s1d'],['s2','s2d'],['s3','s3d']].map(function(a,i){return '<div class="st glass"><span class="n">'+(i+1)+'</span><b>'+esc(t(a[0]))+'</b><p>'+esc(t(a[1]))+'</p></div>'}).join('')+'</div></section>';
+ h+='<section class="sec"><div class="sh"><div><h2>'+esc(t('visitT'))+'</h2><p>'+esc(t('visitS'))+'</p></div><a href="#visit">'+esc(t('visit'))+'</a></div>'+visitBody()+'</section>';
+ return h+foot();
+}
+function visitBody(){
+ var s=cfg(),wa='https://wa.me/'+String(s.whatsapp).replace(/\D/g,'');
+ var map='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('Slimi Bookstore Attatba Tipaza Algérie');
+ var gal=[[s.facade,'gNight'],[s.facade2,'gDay'],[s.in1,'gIn']].filter(function(g){return g[0]}).map(function(g){return '<figure><img src="'+esc(g[0])+'" alt="'+esc(t(g[1]))+'"><figcaption class="glass">'+esc(t(g[1]))+'</figcaption></figure>'}).join('');
+ return '<div class="visit"'+(gal?'':' style="grid-template-columns:1fr"')+'>'+(gal?'<div class="gal">'+gal+'</div>':'')+
+ '<div class="vi glass"><h3>'+esc(t('visitT'))+'</h3>'+
+ '<div class="vr"><span class="k">'+esc(t('addrK'))+'</span><span class="v">'+esc(s.address[S.lang]||s.address.ar)+'</span></div>'+
+ '<div class="vr"><span class="k">'+esc(t('phoneK'))+'</span><span class="v num" dir="ltr">'+esc(s.phone)+'</span></div>'+
+ (s.hours?'<div class="vr"><span class="k">'+esc(t('hoursK'))+'</span><span class="v">'+esc(s.hours)+'</span></div>':'')+
+ (s.email?'<div class="vr"><span class="k">'+esc(t('emailK'))+'</span><span class="v" dir="ltr">'+esc(s.email)+'</span></div>':'')+
+ '<a class="btn primary" href="'+esc(wa)+'" target="_blank" rel="noopener">'+esc(t('wa'))+'</a><a class="btn" href="'+esc(map)+'" target="_blank" rel="noopener">'+esc(t('map'))+'</a></div></div>';
+}
+function visitHtml(){return '<div class="pagehead"><h1>'+esc(t('visitT'))+'</h1><p>'+esc(t('visitS'))+'</p></div>'+visitBody()+foot()}
+function foot(){var s=cfg(),wa='https://wa.me/'+String(s.whatsapp).replace(/\D/g,'');
+ var L=['subs','bills','offers','shop','track','about','contact'].map(function(r){return '<a href="#'+r+'">'+esc(t('n_'+r))+'</a>'}).join('');
+ return '<footer class="ftr"><div class="fc"><div class="fb">'+logo(false)+'<p>'+esc(t('ftTag'))+'</p></div>'+
+ '<div><h4>'+esc(t('ftLinks'))+'</h4>'+L+'</div>'+
+ '<div><h4>'+esc(t('ctT'))+'</h4><a href="tel:'+esc(String(s.phone).replace(/\s/g,''))+'" dir="ltr">'+esc(s.phone)+'</a><a href="'+esc(wa)+'" target="_blank" rel="noopener">WhatsApp</a>'+(s.email?'<span dir="ltr">'+esc(s.email)+'</span>':'')+'<span>'+esc(s.address[S.lang]||s.address.ar)+'</span></div>'+
+ '<div><h4>'+esc(t('ftPay'))+'</h4><span>'+esc(t('ftCod'))+'</span><span>'+esc(t('ftTr'))+'</span>'+(s.gateway?'<span>'+esc(t('ftOn'))+'</span>':'')+'</div></div>'+
+ '<div class="fl"><span>© 2026 '+esc(t('slimi'))+' · '+esc(t('ftRights'))+'</span><span class="fll"><a href="#faq">'+esc(t('lgFaq'))+'</a><a href="#returns">'+esc(t('lgRet'))+'</a><a href="#terms">'+esc(t('lgTerms'))+'</a><a href="#privacy">'+esc(t('lgPriv'))+'</a></span></div></footer>'}
+function shopHtml(){
+ return ph(t('shop'),t('shopS'),'shop')+'<div class="filters glass"><div class="fr1"><input id="q" class="inp search" type="search" placeholder="'+esc(t('search'))+'" value="'+esc(S.q)+'" aria-label="'+esc(t('search'))+'">'+
+ '<select id="sort" class="inp" style="width:auto" aria-label="sort"><option value="def"'+(S.sort==='def'?' selected':'')+'>'+esc(t('sortD'))+'</option><option value="asc"'+(S.sort==='asc'?' selected':'')+'>'+esc(t('sortA'))+'</option><option value="desc"'+(S.sort==='desc'?' selected':'')+'>'+esc(t('sortZ'))+'</option></select></div>'+
+ '<div class="seg" id="chips"></div><div class="seg" id="types"></div></div><div class="grid" id="grid"></div>'+foot();
+}
+function drawChips(){
+ var el=document.getElementById('chips');if(!el)return;
+ var h='<button class="chip" data-act="cat" data-id="all" aria-pressed="'+(S.cat==='all')+'">'+esc(t('all'))+'</button>';
+ CATS.forEach(function(c){h+='<button class="chip" data-act="cat" data-id="'+c.id+'" aria-pressed="'+(S.cat===c.id)+'">'+esc(c[S.lang])+'</button>'});
+ el.innerHTML=h;
+}
+function drawTypes(){
+ var el=document.getElementById('types');if(!el)return;
+ el.innerHTML=[['all','tAll'],['physical','tPhys'],['digital','tDig']].map(function(a){return '<button class="chip" data-act="typ" data-id="'+a[0]+'" aria-pressed="'+(S.type===a[0])+'">'+esc(t(a[1]))+'</button>'}).join('');
+}
+function drawGrid(){
+ var q=S.q.trim().toLowerCase();
+ var list=shown().filter(function(p){
+  if(S.cat!=='all'&&p.cat!==S.cat)return false;
+  if(S.type!=='all'&&p.type!==S.type)return false;
+  if(q&&(p.name.ar+' '+p.name.fr).toLowerCase().indexOf(q)<0)return false;
+  return true;
+ });
+ if(S.sort==='asc')list.sort(function(a,b){return (a.price||1e9)-(b.price||1e9)});
+ if(S.sort==='desc')list.sort(function(a,b){return b.price-a.price});
+ fill('grid',list);
+}
+
+/* ---------- cart ---------- */
+function totals(){
+ var sub=0,phys=0,onreq=false,hasD=false,hasP=false,lines=[],pm=null;
+ for(var id in S.cart){
+  var p=find(id);if(!p||!p.avail)continue;var q=S.cart[id];if(!(q>0))continue;
+  lines.push({p:p,q:q});
+  if(p.pays&&p.pays.length)pm=pm?pm.filter(function(x){return p.pays.indexOf(x)>-1}):p.pays.slice();
+  if(p.price>0){sub+=p.price*q;if(p.type==='physical')phys+=p.price*q}else onreq=true;
+  if(p.type==='digital')hasD=true;else hasP=true;
+ }
+ var st=cfg(),fee=0,feeKnown=true;
+ if(hasP&&S.form.delivery==='home'){
+  if(st.freeFrom>0&&phys>=st.freeFrom)fee=0;
+  else if(!S.form.wilaya)feeKnown=false;
+  else fee=S.form.wilaya==='42'?st.feeLocal:st.feeOther;
+ }
+ return{pm:pm,sub:sub,phys:phys,onreq:onreq,hasD:hasD,hasP:hasP,lines:lines,fee:fee,feeKnown:feeKnown,total:sub+(feeKnown?fee:0)};
+}
+function sumHtml(T){
+ var h='<div class="sum num"><div><span>'+esc(t('sub_t'))+'</span><span>'+esc(fmt(T.sub))+'</span></div>';
+ if(T.hasP){
+  var fl=S.form.delivery==='pickup'?t('free'):(T.feeKnown?(T.fee===0?t('free'):fmt(T.fee)):t('feeAfter'));
+  h+='<div><span>'+esc(t('deliv'))+'</span><span>'+esc(fl)+'</span></div>';
+ }
+ h+='<div class="tot"><span>'+esc(t('total'))+'</span><span>'+esc(fmt(T.total))+'</span></div></div>';
+ if(T.onreq)h+='<div class="note">'+esc(t('onreqnote'))+'</div>';
+ return h;
+}
+function opt(name,val,title,desc,on){
+ return '<label class="opt" data-on="'+(on?1:0)+'"><input type="radio" name="'+name+'" value="'+val+'" data-f="'+name+'"'+(on?' checked':'')+'><span>'+esc(title)+(desc?'<small>'+esc(desc)+'</small>':'')+'</span></label>';
+}
+function drawLayer(){
+ var el=document.getElementById('layer');if(!el)return;
+ if(!S.sheet){el.innerHTML='';return}
+ var T=totals(),h='';
+ if(S.sheet==='prod'){
+  var p=find(S.pid);if(!p){S.sheet=null;el.innerHTML='';return}
+  h='<div class="shead"><span class="lbl">'+esc(catOf(p.cat)[S.lang])+'</span><button class="btn sm ghost" data-act="close">'+esc(t('close'))+'</button></div><div class="pd">'+tile(p)+'<h2>'+esc(pname(p))+'</h2><div style="font-size:20px">'+priceHtml(p)+'</div><div class="note">'+esc(p.type==='digital'?t('digInfo'):t('physInfo'))+'</div><button class="btn primary block" data-act="addClose" data-id="'+esc(p.id)+'">'+esc(t('add'))+'</button></div>';
+ }else if(S.sheet==='cart'){
+  h='<div class="shead"><h2>'+esc(t('yourcart'))+'</h2><button class="btn sm ghost" data-act="close">'+esc(t('close'))+'</button></div>';
+  if(!T.lines.length)h+='<div class="empty">'+esc(t('emptycart'))+'</div>';
+  else{
+   h+=T.lines.map(function(l){
+    return '<div class="line"><div class="n">'+esc(pname(l.p))+'</div><div class="stepper"><button data-act="dec" data-id="'+esc(l.p.id)+'" aria-label="-">&minus;</button><span class="num">'+l.q+'</span><button data-act="inc" data-id="'+esc(l.p.id)+'" aria-label="+">+</button></div>'+
+    '<div class="num" style="color:var(--muted)">'+(l.p.price>0?esc(fmt(l.p.price*l.q)):esc(t('onreq')))+'</div><button class="btn sm ghost" data-act="rm" data-id="'+esc(l.p.id)+'">'+esc(t('remove'))+'</button></div>';
+   }).join('');
+   h+=sumHtml(T)+'<button class="btn primary block" data-act="checkout">'+esc(t('next'))+'</button>';
+  }
+ }else if(S.sheet==='checkout'){
+  var F=S.form,st=cfg();
+  var canOnline=!!cfg().gateway&&!T.onreq&&T.total>=50;
+  var base=['transfer'].concat(T.hasD?[]:['cod']).concat(canOnline?['online']:[]);
+  var al=T.pm?base.filter(function(x){return T.pm.indexOf(x)>-1}):base;T.al=al;
+  if(al.indexOf(F.pay)<0)F.pay=al[0]||'';
+  if(!T.hasP)F.delivery='home';
+  h='<div class="shead"><h2>'+esc(t('review'))+'</h2><button class="btn sm ghost" data-act="openCart">'+esc(t('back'))+'</button></div>';
+  if(S.err.length)h+='<div class="note err">'+S.err.map(esc).join('<br>')+'</div>';
+  h+='<div class="field"><label for="f-name">'+esc(t('name'))+'</label><input class="inp" id="f-name" data-f="name" autocomplete="name" value="'+esc(F.name)+'"></div>';
+  h+='<div class="field"><label for="f-phone">'+esc(t('phone'))+'</label><input class="inp num" id="f-phone" data-f="phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" value="'+esc(F.phone)+'" placeholder="0772 00 00 00"></div>';
+  if(T.hasP){
+   h+='<div class="lbl">'+esc(t('how'))+'</div><div class="opts">'+opt('delivery','home',t('home_d'),'',F.delivery==='home')+opt('delivery','pickup',t('pickup'),t('pickupd'),F.delivery==='pickup')+'</div>';
+   if(F.delivery==='home'){
+    h+='<div class="field"><label for="f-wilaya">'+esc(t('wilaya'))+'</label><select class="inp" id="f-wilaya" data-f="wilaya"><option value="">'+esc(t('pick'))+'</option>'+
+     WIL.map(function(w){return '<option value="'+w.id+'"'+(F.wilaya===w.id?' selected':'')+'>'+w.id+' - '+esc(w[S.lang])+'</option>'}).join('')+'</select></div>';
+    h+='<div class="field"><label for="f-addr">'+esc(t('addr'))+'</label><textarea class="inp" id="f-addr" data-f="addr" autocomplete="street-address">'+esc(F.addr)+'</textarea></div>';
+   }
+  }
+  h+='<div class="lbl">'+esc(t('pay'))+'</div>';
+  if(T.hasD)h+='<div class="note">'+esc(t('prepay'))+'</div>';
+  h+=al.length?'<div class="opts">'+al.map(function(x){return opt('pay',x,t(x),t(x==='cod'?'codd':x==='transfer'?'transferd':'onlined'),F.pay===x)}).join('')+'</div>':'<div class="note err">'+esc(t('payMix'))+'</div>';
+  if(F.pay==='transfer')h+='<div class="note">'+(st.ccp?esc(t('ccpl'))+': <b class="num" dir="ltr">'+esc(st.ccp)+'</b>':esc(t('ccpnone')))+'</div>';
+  if(T.lines.some(function(l){return l.p.needsRef}))h+='<div class="field"><label for="f-ref">'+esc(t('refL'))+'</label><input class="inp num" id="f-ref" data-f="ref" dir="ltr" value="'+esc(F.ref)+'"></div>';
+  h+='<div class="field"><label for="f-note">'+esc(t('notes'))+'</label><textarea class="inp" id="f-note" data-f="note">'+esc(F.note)+'</textarea></div>';
+  h+=sumHtml(T)+'<button class="btn primary block" data-act="review">'+esc(t('review'))+'</button>';
+ }else if(S.sheet==='done'){
+  var O=S.order||{number:''};
+  var link='https://wa.me/'+encodeURIComponent(String(cfg().whatsapp).replace(/\D/g,''))+'?text='+encodeURIComponent(S.msg);
+  h='<div class="shead"><h2>'+esc(t('ordDone'))+'</h2><button class="btn sm ghost" data-act="newOrder">'+esc(t('close'))+'</button></div>'+
+  '<div class="note"><span class="lbl">'+esc(t('ordNo'))+'</span><br><b class="num" dir="ltr" style="font-size:22px">'+esc(O.number)+'</b><br>'+esc(t('ordKeep'))+'</div>'+
+  (O.pay_method==='transfer'?'<div class="note warn">'+(cfg().ccp?esc(t('ccpl'))+': <b class="num" dir="ltr">'+esc(cfg().ccp)+'</b><br>':esc(t('ccpnone'))+'<br>')+esc(t('proofHint'))+'</div><label class="btn block" for="proof-file" style="cursor:pointer">'+esc(t('sendProof'))+'</label><input id="proof-file" type="file" accept="image/*,application/pdf" hidden>':'')+
+  (O.pay_method==='online'?'<div class="note warn">'+esc(t('onlined'))+'</div><button class="btn primary block" data-act="payNow">'+esc(t('payNow'))+'</button>':'')+
+  '<a class="btn'+(O.pay_method==='online'?'':' primary')+' block" href="'+esc(link)+'" target="_blank" rel="noopener">'+esc(t('sendwa'))+'</a>'+
+  '<button class="btn block" data-act="goTrack">'+esc(t('trackOrder'))+'</button><button class="btn ghost block" data-act="newOrder">'+esc(t('neworder'))+'</button>';
+ }
+ el.innerHTML='<div class="layer" data-act="shade"><div class="sheet" role="dialog" aria-modal="true">'+h+'</div></div>';
+}
+function buildMsg(T){
+ var F=S.form,A=TX.ar,w=WIL.filter(function(x){return x.id===F.wilaya})[0];
+ var L=[A.orderT,'رقم الطلب: '+(S.order?S.order.number:''),''];
+ L.push(A.f_name+': '+F.name.trim());
+ L.push(A.f_phone+': '+F.phone.replace(/\s+/g,''));
+ if(T.hasP){
+  L.push(A.f_how+': '+(F.delivery==='home'?A.home_d:A.pickup));
+  if(F.delivery==='home'){L.push(A.f_wil+': '+(w?w.id+' '+w.ar:''));L.push(A.f_addr+': '+F.addr.trim())}
+ }
+ if(F.ref&&T.lines.some(function(l){return l.p.needsRef}))L.push('رقم الخط/العقد: '+F.ref.trim());
+ L.push(A.f_pay+': '+(F.pay==='cod'?A.cod:F.pay==='online'?'دفع إلكتروني':A.transfer));
+ L.push('','------');
+ T.lines.forEach(function(l){L.push(l.q+' × '+l.p.name.ar+' = '+(l.p.price>0?l.p.price*l.q+' '+A.da:A.onreq))});
+ L.push('------');
+ L.push(A.f_sub+': '+T.sub+' '+A.da);
+ if(T.hasP)L.push(A.f_del+': '+(F.delivery==='pickup'?A.free:(T.fee===0?A.free:T.fee+' '+A.da)));
+ L.push(A.f_tot+': '+T.total+' '+A.da);
+ if(T.onreq)L.push(A.f_onreq);
+ if(F.note.trim())L.push('',A.f_note+': '+F.note.trim());
+ return L.join('\n');
+}
+function validate(T){
+ var F=S.form,e=[];
+ if(F.name.trim().length<3)e.push(t('err_name'));
+ if(T.al&&!T.al.length)e.push(t('payMix'));
+ if(!/^0[5-7]\d{8}$/.test(F.phone.replace(/[\s.\-]/g,'')))e.push(t('err_phone'));
+ if(T.hasP&&F.delivery==='home'){if(!F.wilaya)e.push(t('err_wil'));if(F.addr.trim().length<5)e.push(t('err_addr'))}
+ if(T.lines.some(function(l){return l.p.needsRef})&&F.ref.trim().length<4)e.push(t('err_ref'));
+ return e;
+}
+
+function api(u,o){o=o||{};var init={method:o.method||'GET',headers:{},credentials:'same-origin'};if(o.body){init.headers['Content-Type']='application/json';init.body=JSON.stringify(o.body)}return fetch(u,init).then(function(r){return r.json().then(function(j){if(!r.ok)throw j;return j},function(){throw{error:'bad'}})})}
+function load(){return api('/api/catalog').then(function(c){var s=c.settings||{};s.address={ar:s.addrAr||'',fr:s.addrFr||s.addrAr||''};DATA={settings:s,products:(c.products||[]).map(function(p){p.avail=true;return p})}}).catch(function(){S.fail=true})}
+function filePayload(f){return new Promise(function(ok,no){
+ if(f.type==='application/pdf'){if(f.size>2.4e6)return no();var r=new FileReader();r.onload=function(){ok({mime:f.type,data:String(r.result).split(',')[1]})};r.onerror=no;r.readAsDataURL(f);return}
+ var img=new Image(),u=URL.createObjectURL(f);img.onload=function(){var k=Math.min(1,1400/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);ok({mime:'image/jpeg',data:c.toDataURL('image/jpeg',.82).split(',')[1]})};img.onerror=no;img.src=u})}
+function sendProof(fromTrack,f){
+ var num=fromTrack?(S.track&&S.track.num):S.order&&S.order.number,ph=fromTrack?(S.track&&S.track.phone):S.form.phone;
+ filePayload(f).then(function(p){return api('/api/proof',{method:'POST',body:{number:num,phone:ph,mime:p.mime,data:p.data}})}).then(function(){toast(t('proofOk'));if(fromTrack)doTrack()}).catch(function(){toast(t('proofFail'))});
+}
+function payNow(fromTrack){
+ var num=fromTrack?(S.track&&S.track.num):S.order&&S.order.number,ph=fromTrack?(S.track&&S.track.phone):S.form.phone;
+ api('/api/pay',{method:'POST',body:{number:num,phone:ph}}).then(function(r){location.href=r.url}).catch(function(){toast(t('payFail'))});
+}
+function trackHtml(){
+ var T=S.track||{};
+ return '<div class="pagehead"><h1>'+esc(t('trackT'))+'</h1><p>'+esc(t('trackS'))+'</p></div>'+(S.banner?'<div class="note warn" style="margin-bottom:12px">'+esc(S.banner)+'</div>':'')+'<div class="filters glass"><div class="fr1"><input class="inp" id="t-num" dir="ltr" style="flex:1;min-width:180px" placeholder="SLM-261116-001" value="'+esc(T.num||'')+'" aria-label="'+esc(t('ordNum'))+'"><input class="inp num" id="t-phone" dir="ltr" type="tel" inputmode="tel" style="flex:1;min-width:150px" placeholder="0772 00 00 00" value="'+esc(T.phone||'')+'" aria-label="'+esc(t('phone'))+'"><button class="btn primary" data-act="track">'+esc(t('trackGo'))+'</button></div></div><div id="t-res" style="margin-top:14px">'+trackResult()+'</div>'+foot();
+}
+function fmtDate(ts){var d=new Date(ts);return d.toLocaleString(S.lang==='ar'?'ar-DZ-u-nu-latn':'fr-DZ',{dateStyle:'medium',timeStyle:'short'})}
+function trackResult(){
+ var R=S.track&&S.track.res;if(!R)return S.track&&S.track.err?'<div class="note err">'+esc(S.track.err)+'</div>':'';
+ var h='<div class="vi glass"><h3 class="num" dir="ltr" style="text-align:start">'+esc(R.number)+'</h3><div class="vr"><span class="k">'+esc(t('payS'))+'</span><span class="v">'+esc(t('pay_'+R.pay_status))+'</span></div><div class="vr"><span class="k">'+esc(t('total'))+'</span><span class="v num">'+esc(fmt(R.total))+(R.onreq?' +':'')+'</span></div>';
+ if(R.delivery_info)h+='<div class="note"><b>'+esc(t('delInfo'))+'</b><br><span style="white-space:pre-wrap">'+esc(R.delivery_info)+'</span></div>';
+ h+='<div class="sum">'+R.history.map(function(e){return '<div><span><b>'+esc(t('st_'+e.value))+'</b></span><span class="num" style="color:var(--muted)">'+esc(fmtDate(e.ts))+'</span></div>'}).join('')+'</div>';
+ if(R.pay_method==='online'&&R.pay_status!=='paid'&&R.status!=='cancelled'){h+='<button class="btn primary" data-act="trackPay">'+esc(t('payNow'))+'</button>'}
+ if(R.pay_method==='transfer'&&R.pay_status!=='paid'&&R.status!=='cancelled'){h+='<div class="note warn">'+(R.ccp?esc(t('ccpl'))+': <b class="num" dir="ltr">'+esc(R.ccp)+'</b><br>':'')+esc(t('proofHint'))+'</div><label class="btn" for="t-proof" style="cursor:pointer">'+esc(t('sendProof'))+'</label><input id="t-proof" type="file" accept="image/*,application/pdf" hidden>'}
+ return h+'</div>';
+}
+function doTrack(){
+ var n=document.getElementById('t-num'),p=document.getElementById('t-phone');
+ var num=(n?n.value:S.track&&S.track.num||'').trim(),ph=(p?p.value:S.track&&S.track.phone||'').trim();
+ S.track={num:num,phone:ph};
+ api('/api/track?number='+encodeURIComponent(num)+'&phone='+encodeURIComponent(ph)).then(function(r){S.track.res=r;S.track.err='';var e=document.getElementById('t-res');if(e)e.innerHTML=trackResult()}).catch(function(){S.track.res=null;S.track.err=t('notFound');var e=document.getElementById('t-res');if(e)e.innerHTML=trackResult()});
+}
+
+/* ---------- events ---------- */
+app.addEventListener('click',function(e){
+ var b=e.target.closest('[data-act]');if(!b)return;
+ var a=b.dataset.act,id=b.dataset.id;
+ if(a==='shade'){if(e.target!==b)return;a='close'}
+ switch(a){
+  case 'hsearch':var qi=document.getElementById('hq');S.q=qi?qi.value:'';S.cat='all';S.type='all';if(S.route==='shop')drawPage();else nav('shop');break;
+  case 'wasend':var cn=document.getElementById('c-name'),cm=document.getElementById('c-msg'),sw=cfg();window.open('https://wa.me/'+String(sw.whatsapp).replace(/\D/g,'')+'?text='+encodeURIComponent((cn&&cn.value?cn.value+': ':'')+(cm?cm.value:'')),'_blank','noopener');break;
+  case 'authTab':S.authTab=id;S.authErr='';drawPage();break;
+  case 'doLogin':case 'doReg':var reg=a==='doReg',body={phone:(document.getElementById('a-phone')||{}).value,password:(document.getElementById('a-pw')||{}).value};
+   if(reg){body.name=(document.getElementById('a-name')||{}).value;body.email=(document.getElementById('a-mail')||{}).value}
+   b.disabled=true;api(reg?'/api/c/register':'/api/c/login',{method:'POST',body:body}).then(function(c){setCust(c);S.authErr='';drawNav();nav('account')}).catch(function(e){S.authErr=t('e_'+((e&&e.error)||'net'))||t('e_net');b.disabled=false;var ee=document.getElementById('a-err');if(ee){ee.textContent=S.authErr;ee.hidden=false}});break;
+  case 'doLogout':api('/api/c/logout',{method:'POST',body:{}}).then(function(){S.cust=null;S.myOrders=null;drawNav();nav('home')}).catch(function(){});break;
+  case 'trackNo':S.track={num:id,phone:S.cust?S.cust.phone:''};nav('track');break;
+  case 'lang':S.lang=S.lang==='ar'?'fr':'ar';try{localStorage.setItem('slimi-lang',S.lang)}catch(x){}drawShell();break;
+  case 'cat':S.cat=id;drawChips();drawGrid();break;
+  case 'typ':S.type=id;drawTypes();drawGrid();break;
+  case 'catGo':S.cat=id;S.type='all';S.q='';if(S.route==='shop'){drawPage()}else nav('shop');break;
+  case 'open':nav('product/'+id);break;
+  case 'pqm':case 'pqp':var pe=document.getElementById('pq');if(pe){var pv=Math.max(1,Math.min(20,(+pe.textContent||1)+(a==='pqp'?1:-1)));pe.textContent=pv}break;
+  case 'zoom':var z=document.createElement('div');z.className='zoom';z.setAttribute('data-act','zoomx');z.setAttribute('role','dialog');z.setAttribute('aria-modal','true');z.innerHTML='<img src="'+esc(id)+'" alt=""><button type="button" data-act="zoomx" aria-label="'+esc(t('close'))+'">&times;</button>';app.appendChild(z);var zb=z.querySelector('button');if(zb)zb.focus();break;
+  case 'zoomx':var zz=document.querySelector('.zoom');if(zz)zz.remove();break;
+  case 'add':var aq=b.dataset.q?(+(document.getElementById('pq')||{}).textContent||1):1;S.cart[id]=(S.cart[id]||0)+aq;saveCart();drawBadge();toast(t('added'));break;
+  case 'addClose':S.cart[id]=(S.cart[id]||0)+1;saveCart();drawBadge();S.sheet=null;drawLayer();toast(t('added'));break;
+  case 'inc':S.cart[id]=(S.cart[id]||0)+1;saveCart();drawBadge();drawLayer();break;
+  case 'dec':S.cart[id]=(S.cart[id]||0)-1;if(S.cart[id]<=0)delete S.cart[id];saveCart();drawBadge();drawLayer();break;
+  case 'rm':delete S.cart[id];saveCart();drawBadge();drawLayer();break;
+  case 'openCart':S.sheet='cart';drawLayer();break;
+  case 'close':S.sheet=null;drawLayer();break;
+  case 'checkout':S.sheet='checkout';S.err=[];drawLayer();break;
+  case 'review':var T=totals();S.err=validate(T);if(S.err.length){drawLayer();break}
+   b.disabled=true;
+   api('/api/orders',{method:'POST',body:{items:T.lines.map(function(l){return{id:l.p.id,q:l.q}}),name:S.form.name,phone:S.form.phone,delivery:S.form.delivery,wilaya:S.form.wilaya,addr:S.form.addr,pay:S.form.pay,note:S.form.note,accountRef:S.form.ref,lang:S.lang}}).then(function(r){S.order=r;S.msg=buildMsg(T);S.cart={};saveCart();drawBadge();S.sheet='done';drawLayer();if(r.pay_method==='online')payNow(false)}).catch(function(){S.err=[t('err_net')];drawLayer()});break;
+  case 'copy':
+   try{navigator.clipboard.writeText(S.msg).then(function(){toast(t('copied'))},function(){toast(t('copyfail'))})}catch(x){toast(t('copyfail'))}
+   break;
+  case 'newOrder':S.cart={};saveCart();S.sheet=null;S.form.note='';drawBadge();drawLayer();break;
+  case 'track':doTrack();break;
+  case 'payNow':payNow(false);break;
+  case 'trackPay':payNow(true);break;
+  case 'goTrack':S.sheet=null;drawLayer();S.track={num:S.order?S.order.number:'',phone:S.form.phone};nav('track');break;
+ }
+});
+app.addEventListener('input',function(e){
+ var el=e.target;
+ if(el.id==='q'){S.q=el.value;drawGrid();return}
+ if(el.dataset.f&&el.type!=='radio'){S.form[el.dataset.f]=el.value;return}
+});
+app.addEventListener('change',function(e){
+ var el=e.target;
+ if(el.id==='sort'){S.sort=el.value;drawGrid();return}
+ if(el.dataset.f==='wilaya'){S.form.wilaya=el.value;drawLayer();return}
+ if(el.type==='radio'&&el.dataset.f){S.form[el.dataset.f]=el.value;drawLayer();return}
+ if((el.id==='proof-file'||el.id==='t-proof')&&el.files&&el.files[0]){sendProof(el.id==='t-proof',el.files[0]);return}
+});
+document.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target&&e.target.id==='hq'){e.preventDefault();var hb=document.querySelector('[data-act=hsearch]');if(hb)hb.click();return}if(e.key==='Escape'&&S.sheet){S.sheet=null;drawLayer()}});
+document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e.target.closest('a[href^="#"]'):null;if(!a||a.target==='_blank'||e.defaultPrevented||e.metaKey||e.ctrlKey)return;var h=a.getAttribute('href').slice(1);if(h==='')return;e.preventDefault();nav(h)});
+window.addEventListener('hashchange',function(){
+ S.hv=null;S.route=routeNow();S.confirmDel=null;drawNav();drawPage();window.scrollTo(0,0);
+});
+
+try{var q=new URLSearchParams(location.search);if(q.get('paid')){S.track={num:q.get('paid'),phone:''};S.banner=t('paidBack')}else if(q.get('failed')){S.track={num:q.get('failed'),phone:''};S.banner=t('failBack')}}catch(e){}
+S.route=routeNow();
+function skel(){app.innerHTML='<div class="skw" aria-busy="true"><div class="skl skh"></div><div class="skl skb"></div><div class="skg"><i class="skl"></i><i class="skl"></i><i class="skl"></i><i class="skl"></i></div></div>'}
+function boot(){S.fail=false;skel();load().then(function(){if(S.fail){app.innerHTML='<div class="state" role="alert">'+ic('refresh',40)+'<div><b>'+esc(t('loadFail'))+'</b>'+esc(t('loadFailS'))+'</div><button class="btn primary" id="retry">'+esc(t('retry'))+'</button></div>';var r=document.getElementById('retry');if(r)r.addEventListener('click',boot);return}drawShell();api('/api/c/me').then(function(c){setCust(c);drawNav();if(S.route==='account'||S.route==='login')drawPage()}).catch(function(){})})}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){var zz=document.querySelector('.zoom');if(zz)zz.remove()}});
+boot();
+})();
+</script>
+</body></html>
