@@ -364,7 +364,7 @@ function ico(k,n){return '<svg class="ic" width="'+(n||20)+'" height="'+(n||20)+
 function nav(id,label,perm,badge){if(perm&&!has(perm))return '';return '<button class="si" data-act="page" data-id="'+id+'"'+(S.page===id?' aria-current="page"':'')+'>'+ico(id)+'<span>'+esc(label)+'</span>'+(badge?'<span class="cbadge">'+badge+'</span>':'')+'</button>'}
 function drawShell(){
  var n=S.poll.newCount;
- app.innerHTML='<div class="ambient" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div><div class="wrap"><div class="shell"><nav class="side"><img class="blogo" id="blogo" alt="مكتبة سليمي"><div class="who"><b>'+esc(S.me.name)+'</b><span>'+esc(ROLEN[S.me.role]||'')+'</span></div>'+
+ app.innerHTML='<div class="ambient" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div><div class="wrap"><div class="shell"><nav class="side" aria-label="التنقل في لوحة التحكم"><img class="blogo" id="blogo" alt="مكتبة سليمي"><div class="who"><b>'+esc(S.me.name)+'</b><span>'+esc(ROLEN[S.me.role]||'')+'</span></div>'+
  nav('dash','الرئيسية','reports')+nav('orders','الطلبات','orders',n||'')+nav('products','المنتجات','products')+nav('subs','الاشتراكات','subs')+nav('staff','الموظفون','staff')+nav('settings','الإعدادات','settings')+nav('audit','سجل العمليات','audit')+
  '<a class="si" href="/" target="_blank" rel="noopener">'+ico('store')+'<span>عرض المتجر</span></a><button class="si" data-act="logout">'+ico('out')+'<span>تسجيل الخروج</span></button></nav><main id="main"></main></div></div><div id="layer"></div><div class="toast" id="toast" role="status"></div>';
  drawPage();drawSheet();setLogo();

@@ -1,0 +1,111 @@
+name: CI
+
+on:
+  push:
+    branches: [main, audit-and-improvements]
+  pull_request:
+    branches: [main]
+
+jobs:
+  syntax-and-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check server syntax
+        run: npm run check
+      - name: Start app and smoke-test core routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          export OWNER_PASSWORD='ci-test-password-123'
+          export DATA_DIR="$(mktemp -d)"
+          export PORT=3137
+          node --no-warnings server.js > /tmp/slimi-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for attempt in {1..30}; do
+            if curl -fsS http://127.0.0.1:3137/health >/dev/null; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$ready" -ne 1 ]; then
+            cat /tmp/slimi-server.log
+            exit 1
+          fi
+          curl -fsS http://127.0.0.1:3137/api/catalog | grep -q '"products"'
+          curl -fsS http://127.0.0.1:3137/ >/dev/null
+          curl -fsS http://127.0.0.1:3137/admin >/dev/null
+          curl -fsS -c /tmp/slimi-cookies -H 'Content-Type: application/json' \
+            -d '{"username":"owner","password":"ci-test-password-123"}' \
+            http://127.0.0.1:3137/api/login | grep -q '"username":"owner"'
+          curl -fsS -b /tmp/slimi-cookies http://127.0.0.1:3137/api/admin/products | grep -q '\['
+
+          # Create a temporary physical product through the owner API.
+          product_json=$(curl -fsS -b /tmp/slimi-cookies -H 'Content-Type: application/json' \
+            -d '{"cat":"school","type":"physical","name":{"ar":"منتج اختبار","fr":"Produit test"},"price":150,"old":0,"avail":true}' \
+            http://127.0.0.1:3137/api/admin/products)
+          product_id=$(printf '%s' "$product_json" | node -pe 'JSON.parse(require("fs").readFileSync(0,"utf8")).id')
+          test -n "$product_id"
+
+          # Register a customer, place an order, and verify account history and tracking.
+          curl -fsS -c /tmp/slimi-customer-cookies -H 'Content-Type: application/json' \
+            -d '{"name":"Customer CI","phone":"0551234567","password":"ci-customer-password","email":"ci@example.test"}' \
+            http://127.0.0.1:3137/api/c/register | grep -q '"phone":"0551234567"'
+          order_json=$(curl -fsS -b /tmp/slimi-customer-cookies -H 'Content-Type: application/json' \
+            -d "{\"name\":\"Customer CI\",\"phone\":\"0551234567\",\"delivery\":\"pickup\",\"pay\":\"transfer\",\"items\":[{\"id\":\"$product_id\",\"q\":1}]}" \
+            http://127.0.0.1:3137/api/orders)
+          order_number=$(printf '%s' "$order_json" | node -pe 'JSON.parse(require("fs").readFileSync(0,"utf8")).number')
+          test -n "$order_number"
+          curl -fsS -b /tmp/slimi-customer-cookies http://127.0.0.1:3137/api/c/orders | grep -q "$order_number"
+          curl -fsS --get --data-urlencode "number=$order_number" --data-urlencode 'phone=0551234567' \
+            http://127.0.0.1:3137/api/track | grep -q '"status":"new"'
+          order_id=$(curl -fsS -b /tmp/slimi-cookies "http://127.0.0.1:3137/api/admin/orders?status=new" | node -pe 'JSON.parse(require("fs").readFileSync(0,"utf8"))[0].id')
+
+          # A valid transfer receipt is accepted, but a receipt cannot be attached to a paid order.
+          proof_json='{"number":"'"$order_number"'","phone":"0551234567","mime":"image/png","data":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/gT8AAAAASUVORK5CYII="}'
+          curl -fsS -H 'Content-Type: application/json' -d "$proof_json" http://127.0.0.1:3137/api/proof | grep -q '"ok":true'
+          curl -fsS --get --data-urlencode "number=$order_number" --data-urlencode 'phone=0551234567' \
+            http://127.0.0.1:3137/api/track | grep -q '"pay_status":"proof_sent"'
+          curl -fsS -b /tmp/slimi-cookies -X PATCH -H 'Content-Type: application/json' \
+            -d '{"pay_status":"paid"}' "http://127.0.0.1:3137/api/admin/orders/$order_id" >/dev/null
+          proof_paid_status=$(curl -sS -o /dev/null -w '%{http_code}' -H 'Content-Type: application/json' \
+            -d "$proof_json" http://127.0.0.1:3137/api/proof)
+          test "$proof_paid_status" = "409"
+
+          # Cash-on-delivery orders must never accept a bank-transfer receipt.
+          cod_json=$(curl -fsS -b /tmp/slimi-customer-cookies -H 'Content-Type: application/json' \
+            -d "{\"name\":\"Customer CI\",\"phone\":\"0551234567\",\"delivery\":\"pickup\",\"pay\":\"cod\",\"items\":[{\"id\":\"$product_id\",\"q\":1}]}" \
+            http://127.0.0.1:3137/api/orders)
+          cod_number=$(printf '%s' "$cod_json" | node -pe 'JSON.parse(require("fs").readFileSync(0,"utf8")).number')
+          cod_proof_status=$(curl -sS -o /dev/null -w '%{http_code}' -H 'Content-Type: application/json' \
+            -d '{"number":"'"$cod_number"'","phone":"0551234567","mime":"image/png","data":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/gT8AAAAASUVORK5CYII="}' \
+            http://127.0.0.1:3137/api/proof)
+          test "$cod_proof_status" = "409"
+          curl -fsS -b /tmp/slimi-cookies "http://127.0.0.1:3137/api/admin/orders?status=new" | grep -q "$order_number"
+          curl -fsS -b /tmp/slimi-cookies -X PATCH -H 'Content-Type: application/json' \
+            -d '{"status":"confirmed"}' "http://127.0.0.1:3137/api/admin/orders/$order_id" | grep -q '"ok":true'
+          curl -fsS --get --data-urlencode "number=$order_number" --data-urlencode 'phone=0551234567' \
+            http://127.0.0.1:3137/api/track | grep -q '"status":"confirmed"'
+
+          # Verify employee permissions are enforced by the server, not just hidden in the UI.
+          curl -fsS -b /tmp/slimi-cookies -H 'Content-Type: application/json' \
+            -d '{"username":"ci-staff","name":"CI Staff","role":"staff","perms":["orders"],"password":"ci-staff-password"}' \
+            http://127.0.0.1:3137/api/admin/users | grep -q '"ok":true'
+          curl -fsS -c /tmp/slimi-staff-cookies -H 'Content-Type: application/json' \
+            -d '{"username":"ci-staff","password":"ci-staff-password"}' \
+            http://127.0.0.1:3137/api/login | grep -q '"username":"ci-staff"'
+          curl -fsS -b /tmp/slimi-staff-cookies http://127.0.0.1:3137/api/admin/orders | grep -q "$order_number"
+          forbidden_status=$(curl -sS -o /dev/null -w '%{http_code}' -b /tmp/slimi-staff-cookies \
+            http://127.0.0.1:3137/api/admin/products)
+          test "$forbidden_status" = "403"
+          curl -fsS -b /tmp/slimi-customer-cookies -X POST -H 'Content-Type: application/json' \
+            -d '{}' http://127.0.0.1:3137/api/c/logout | grep -q '"ok":true'
+          customer_status=$(curl -sS -o /dev/null -w '%{http_code}' -b /tmp/slimi-customer-cookies \
+            http://127.0.0.1:3137/api/c/me)
+          test "$customer_status" = "401"

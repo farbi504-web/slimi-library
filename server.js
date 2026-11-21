@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS media(id TEXT PRIMARY KEY, mime TEXT NOT NULL, data B
 CREATE TABLE IF NOT EXISTS products(id TEXT PRIMARY KEY, cat TEXT NOT NULL, type TEXT NOT NULL, name_ar TEXT NOT NULL, name_fr TEXT NOT NULL, price INTEGER NOT NULL DEFAULT 0, old INTEGER NOT NULL DEFAULT 0, avail INTEGER NOT NULL DEFAULT 1, img TEXT NOT NULL DEFAULT '', sort INTEGER NOT NULL DEFAULT 0);
 CREATE TABLE IF NOT EXISTS orders(id INTEGER PRIMARY KEY, number TEXT UNIQUE NOT NULL, created INTEGER NOT NULL, status TEXT NOT NULL, pay_status TEXT NOT NULL, pay_method TEXT NOT NULL, delivery TEXT NOT NULL, name TEXT NOT NULL, phone TEXT NOT NULL, wilaya TEXT, addr TEXT, note TEXT, staff_note TEXT, items TEXT NOT NULL, subtotal INTEGER NOT NULL, fee INTEGER NOT NULL, total INTEGER NOT NULL, onreq INTEGER NOT NULL DEFAULT 0, has_phys INTEGER NOT NULL DEFAULT 0, has_dig INTEGER NOT NULL DEFAULT 0, lang TEXT, proof_mime TEXT, proof BLOB, proof_ts INTEGER);
 CREATE INDEX IF NOT EXISTS orders_created ON orders(created);
+CREATE INDEX IF NOT EXISTS sessions_exp ON sessions(exp);
 CREATE TABLE IF NOT EXISTS order_events(id INTEGER PRIMARY KEY, order_id INTEGER NOT NULL, ts INTEGER NOT NULL, kind TEXT NOT NULL, value TEXT, actor TEXT);
 CREATE TABLE IF NOT EXISTS subs(id INTEGER PRIMARY KEY, customer TEXT NOT NULL, phone TEXT, service TEXT NOT NULL, price INTEGER NOT NULL DEFAULT 0, start TEXT NOT NULL, end TEXT NOT NULL, note TEXT, order_number TEXT, created INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS audit(id INTEGER PRIMARY KEY, ts INTEGER NOT NULL, actor TEXT NOT NULL, action TEXT NOT NULL, detail TEXT);
@@ -27,6 +28,7 @@ addCol('products', 'needs_ref', 'INTEGER NOT NULL DEFAULT 0'); addCol('products'
 addCol('products', 'desc_ar', "TEXT DEFAULT ''"); addCol('products', 'desc_fr', "TEXT DEFAULT ''");
 addCol('orders', 'customer_id', 'INTEGER');
 db.exec('CREATE TABLE IF NOT EXISTS customers(id INTEGER PRIMARY KEY, phone TEXT UNIQUE NOT NULL, name TEXT NOT NULL, email TEXT DEFAULT "", salt TEXT NOT NULL, hash TEXT NOT NULL, created INTEGER NOT NULL); CREATE TABLE IF NOT EXISTS csessions(token TEXT PRIMARY KEY, cid INTEGER NOT NULL, exp INTEGER NOT NULL);');
+db.exec('CREATE INDEX IF NOT EXISTS orders_customer_id ON orders(customer_id); CREATE INDEX IF NOT EXISTS csessions_exp ON csessions(exp);');
 const GATEWAY_KEY = process.env.CHARGILY_SECRET_KEY || '';
 const GATEWAY_BASE = process.env.GATEWAY_BASE_URL || ((process.env.CHARGILY_MODE === 'live') ? 'https://pay.chargily.net/api/v2' : 'https://pay.chargily.net/test/api/v2');
 /* ---------- helpers ---------- */
@@ -94,25 +96,40 @@ seed();
 /* ---------- http plumbing ---------- */
 const PUB = path.join(__dirname, 'public');
 function send(res, code, body, headers) {
-  const h = Object.assign({ 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'same-origin' }, headers || {});
+  const h = Object.assign({ 'X-Content-Type-Options': 'nosniff', 'X-Frame-Options': 'DENY', 'Referrer-Policy': 'same-origin', 'Permissions-Policy': 'camera=(), microphone=(), geolocation=()' }, headers || {});
   res.writeHead(code, h); res.end(body);
 }
 const json = (res, code, obj) => send(res, code, JSON.stringify(obj), { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
 const fail = (res, code, msg) => json(res, code, { error: msg });
 function readBody(req, limit) {
   return new Promise((ok, no) => {
-    let n = 0; const c = [];
-    req.on('data', d => { n += d.length; if (n > limit) { no(Object.assign(new Error('too_large'), { code: 413 })); req.destroy(); } else c.push(d); });
-    req.on('end', () => { try { ok(c.length ? JSON.parse(Buffer.concat(c).toString('utf8')) : {}); } catch { no(Object.assign(new Error('bad_json'), { code: 400 })); } });
-    req.on('error', no);
+    let n = 0, settled = false; const c = [];
+    req.on('data', d => {
+      if (settled) return;
+      n += d.length;
+      if (n > limit) { settled = true; c.length = 0; no(Object.assign(new Error('too_large'), { code: 413 })); req.resume(); }
+      else c.push(d);
+    });
+    req.on('end', () => {
+      if (settled) return;
+      settled = true;
+      try { ok(c.length ? JSON.parse(Buffer.concat(c).toString('utf8')) : {}); }
+      catch { no(Object.assign(new Error('bad_json'), { code: 400 })); }
+    });
+    req.on('error', e => { if (!settled) { settled = true; no(e); } });
   });
 }
 function readRaw(req, limit) {
   return new Promise((ok, no) => {
-    let n = 0; const c = [];
-    req.on('data', d => { n += d.length; if (n > limit) { no(Object.assign(new Error('too_large'), { code: 413 })); req.destroy(); } else c.push(d); });
-    req.on('end', () => ok(Buffer.concat(c)));
-    req.on('error', no);
+    let n = 0, settled = false; const c = [];
+    req.on('data', d => {
+      if (settled) return;
+      n += d.length;
+      if (n > limit) { settled = true; c.length = 0; no(Object.assign(new Error('too_large'), { code: 413 })); req.resume(); }
+      else c.push(d);
+    });
+    req.on('end', () => { if (!settled) { settled = true; ok(Buffer.concat(c)); } });
+    req.on('error', e => { if (!settled) { settled = true; no(e); } });
   });
 }
 const cookies = req => Object.fromEntries((req.headers.cookie || '').split(';').map(s => s.trim().split('=')).filter(a => a[0]).map(a => [a[0], decodeURIComponent(a.slice(1).join('='))]));
@@ -138,11 +155,19 @@ function custLogin(req, res, c) {
   res.setHeader('Set-Cookie', 'cid=' + tok + '; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000' + (isHttps(req) ? '; Secure' : ''));
 }
 const attempts = new Map();
+function pruneAttempts(t) {
+  if (attempts.size <= 10000) return;
+  for (const [k, a] of attempts) if (!a.length || t - a[a.length - 1] > 3600e3) attempts.delete(k);
+  while (attempts.size > 10000) attempts.delete(attempts.keys().next().value);
+}
 function limited(key, max, win) {
   const t = now(), a = (attempts.get(key) || []).filter(x => t - x < win);
-  attempts.set(key, a); return a.length >= max;
+  attempts.set(key, a); pruneAttempts(t); return a.length >= max;
 }
-const hit = key => { const a = attempts.get(key) || []; a.push(now()); attempts.set(key, a); };
+const hit = key => {
+  const t = now(), a = (attempts.get(key) || []).filter(x => t - x < 3600e3);
+  a.push(t); attempts.set(key, a); pruneAttempts(t);
+};
 const CSP = "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'";
 function page(res, file) {
   const f = path.join(PUB, file);
@@ -157,7 +182,7 @@ function decodeFile(b, allowPdf, max) {
   const buf = Buffer.from(b.data, 'base64');
   if (!buf.length || buf.length > max) return null;
   const sig = buf.subarray(0, 4).toString('hex');
-  const good = (b.mime === 'image/jpeg' && sig.startsWith('ffd8ff')) || (b.mime === 'image/png' && sig === '89504e47') || (b.mime === 'image/webp' && buf.subarray(0, 4).toString() === 'RIFF') || (b.mime === 'application/pdf' && buf.subarray(0, 4).toString() === '%PDF');
+  const good = (b.mime === 'image/jpeg' && sig.startsWith('ffd8ff')) || (b.mime === 'image/png' && sig === '89504e47') || (b.mime === 'image/webp' && buf.subarray(0, 4).toString() === 'RIFF' && buf.subarray(8, 12).toString() === 'WEBP') || (b.mime === 'application/pdf' && buf.subarray(0, 4).toString() === '%PDF');
   return good ? buf : null;
 }
 
@@ -261,7 +286,7 @@ async function handle(req, res) {
   if (!p.startsWith('/api/')) return fail(res, 404, 'not_found');
   if (m === 'POST' && p === '/api/webhook/chargily') {
     if (!GATEWAY_KEY) return fail(res, 404, 'no_gateway');
-    const raw = await new Promise((ok, no) => { let n = 0; const c = []; req.on('data', d => { n += d.length; if (n > 50000) { no(Object.assign(new Error('too_large'), { code: 413 })); req.destroy(); } else c.push(d); }); req.on('end', () => ok(Buffer.concat(c))); req.on('error', no); });
+    let raw; try { raw = await readRaw(req, 50000); } catch (e) { return fail(res, e && e.code === 413 ? 413 : 400, 'bad_webhook_body'); }
     const sig = String(req.headers['signature'] || ''), calc = crypto.createHmac('sha256', GATEWAY_KEY).update(raw).digest('hex');
     if (sig.length !== calc.length || !crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(calc))) { audit('gateway', 'webhook_rejected', 'bad signature'); return fail(res, 403, 'bad_signature'); }
     let ev; try { ev = JSON.parse(raw.toString('utf8')); } catch { return fail(res, 400, 'bad_json'); }
@@ -276,7 +301,8 @@ async function handle(req, res) {
     if (!ctype.includes('application/json') && !(p === '/api/admin/video' && /^video\/(mp4|webm)\b/.test(ctype))) return fail(res, 415, 'json_only');
     const o = req.headers.origin; if (o) { try { if (new URL(o).host !== req.headers.host) return fail(res, 403, 'origin'); } catch { return fail(res, 403, 'origin'); } }
   }
-  const ip = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+  const forwarded = process.env.TRUST_PROXY === 'true' ? String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() : '';
+  const ip = forwarded || String(req.socket.remoteAddress || 'unknown').trim();
 
   /* public */
   if (m === 'GET' && p === '/api/catalog') {
@@ -287,7 +313,7 @@ async function handle(req, res) {
   }
   if (m === 'POST' && p === '/api/orders') {
     if (limited('ord:' + ip, 12, 3600e3)) return fail(res, 429, 'slow_down');
-    const b = await readBody(req, 20000); hit('ord:' + ip);
+    hit('ord:' + ip); const b = await readBody(req, 20000);
     const r = createOrder(b, custUser(req)); if (r.error) return fail(res, 422, r.error);
     return json(res, 201, r);
   }
@@ -300,9 +326,10 @@ async function handle(req, res) {
   }
   if (m === 'POST' && p === '/api/proof') {
     if (limited('prf:' + ip, 10, 3600e3)) return fail(res, 429, 'slow_down');
-    const b = await readBody(req, 4e6); hit('prf:' + ip);
+    hit('prf:' + ip); const b = await readBody(req, 4e6);
     const o = row('SELECT * FROM orders WHERE number=?', str(b.number, 30).toUpperCase());
     if (!o || o.phone !== cleanPhone(b.phone)) return fail(res, 404, 'not_found');
+    if (o.pay_method !== 'transfer' || ['paid', 'refunded'].includes(o.pay_status) || o.status === 'cancelled') return fail(res, 409, 'proof_not_allowed');
     const buf = decodeFile(b, true, 2.5e6); if (!buf) return fail(res, 422, 'bad_file');
     run('UPDATE orders SET proof=?,proof_mime=?,proof_ts=?,pay_status=CASE WHEN pay_status=\'unpaid\' THEN \'proof_sent\' ELSE pay_status END WHERE id=?', buf, b.mime, now(), o.id);
     eventAdd(o.id, 'proof', 'uploaded', 'customer');
@@ -538,6 +565,7 @@ server.listen(PORT, '0.0.0.0', () => console.log('[slimi] listening on ' + PORT)
 function maintain() {
   try {
     run('DELETE FROM sessions WHERE exp<?', now());
+    run('DELETE FROM csessions WHERE exp<?', now());
     const f = path.join(DATA_DIR, 'backups', 'slimi-' + ymd(now()) + '.db');
     if (!fs.existsSync(f)) { db.exec("VACUUM INTO '" + f.replace(/'/g, "''") + "'"); }
     fs.readdirSync(path.join(DATA_DIR, 'backups')).filter(x => x.endsWith('.db')).sort().reverse().slice(7).forEach(x => fs.unlinkSync(path.join(DATA_DIR, 'backups', x)));
