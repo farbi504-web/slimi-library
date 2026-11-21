@@ -1,5 +1,13 @@
 <!doctype html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>مكتبة سليمي</title>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>مكتبة سليمي | تسوّق الأدوات والاشتراكات والخدمات</title>
+<meta name="description" content="مكتبة سليمي — وجهتك للأدوات المدرسية والمكتبية والاشتراكات الرقمية والألعاب والخدمات. تصفح المنتجات واطلب بسهولة مع متابعة حالة طلبك.">
+<meta name="theme-color" content="#FAF7EE">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ar_DZ">
+<meta property="og:site_name" content="مكتبة سليمي">
+<meta property="og:title" content="مكتبة سليمي | تسوّق بسهولة">
+<meta property="og:description" content="الأدوات المدرسية والمكتبية والاشتراكات الرقمية والألعاب والخدمات في مكان واحد.">
+<meta name="twitter:card" content="summary">
 <link rel="icon" type="image/png" href="/brand/mark.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Tajawal:wght@500;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
 <style id="css">
 /* Slimi Bookstore: editorial identity. Paper, ink navy, one gold rule. No glass, no gradients, no glow.
@@ -584,7 +592,7 @@ function logo(big){
 }
 function tile(p){
  var c=catOf(p.cat);
- var inner=p.img?'<img src="'+esc(p.img)+'" alt="">':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+GLYPH[p.cat]+'</svg>';
+ var inner=p.img?'<img src="'+esc(p.img)+'" alt="'+esc(pname(p))+'" loading="lazy" decoding="async">':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+GLYPH[p.cat]+'</svg>';
  return '<div class="tile" style="--cat:var(--c-'+esc(c.id)+')">'+inner+(p.type==='digital'?'<span class="tag glass">'+esc(t('digital'))+'</span>':'')+'</div>';
 }
 function priceHtml(p){
@@ -725,7 +733,7 @@ function homeHtml(){
  h+='<section class="sec"><div class="sh"><h2>'+esc(t('popT'))+'</h2><a href="#shop">'+esc(t('seeAll'))+'</a></div><div class="grid" id="hgrid"></div></section>';
  var dig=shown().filter(function(p){return p.type==='digital'&&p.img});
  if(dig.length)h+='<section class="sec"><div class="sh"><div><h2>'+esc(t('digT'))+'</h2><p>'+esc(t('digS'))+'</p></div></div><div class="strip">'+dig.map(function(p){
-  return '<button class="pz" data-act="open" data-id="'+esc(p.id)+'"><img src="'+esc(p.img)+'" alt=""><span class="in glass"><b>'+esc(pname(p))+'</b><span class="num">'+(p.price>0?esc(fmt(p.price)):esc(t('onreq')))+'</span></span></button>';
+  return '<button class="pz" data-act="open" data-id="'+esc(p.id)+'"><img src="'+esc(p.img)+'" alt="'+esc(pname(p))+'" loading="lazy" decoding="async"><span class="in glass"><b>'+esc(pname(p))+'</b><span class="num">'+(p.price>0?esc(fmt(p.price)):esc(t('onreq')))+'</span></span></button>';
  }).join('')+'</div></section>';
  h+='<section class="sec"><div class="sh"><h2>'+esc(t('howT'))+'</h2></div><div class="steps">'+
  [['s1','s1d'],['s2','s2d'],['s3','s3d']].map(function(a,i){return '<div class="st glass"><span class="n">'+(i+1)+'</span><b>'+esc(t(a[0]))+'</b><p>'+esc(t(a[1]))+'</p></div>'}).join('')+'</div></section>';
