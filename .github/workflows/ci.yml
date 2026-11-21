@@ -45,3 +45,24 @@ jobs:
             -d '{"username":"owner","password":"ci-test-password-123"}' \
             http://127.0.0.1:3137/api/login | grep -q '"username":"owner"'
           curl -fsS -b /tmp/slimi-cookies http://127.0.0.1:3137/api/admin/products | grep -q '\['
+
+          # Create a temporary physical product through the owner API.
+          product_json=$(curl -fsS -b /tmp/slimi-cookies -H 'Content-Type: application/json' \
+            -d '{"cat":"school","type":"physical","name":{"ar":"منتج اختبار","fr":"Produit test"},"price":150,"old":0,"avail":true}' \
+            http://127.0.0.1:3137/api/admin/products)
+          product_id=$(printf '%s' "$product_json" | node -pe 'JSON.parse(require("fs").readFileSync(0,"utf8")).id')
+          test -n "$product_id"
+
+          # Register a customer, place an order, and verify account history and tracking.
+          curl -fsS -c /tmp/slimi-customer-cookies -H 'Content-Type: application/json' \
+            -d '{"name":"Customer CI","phone":"0551234567","password":"ci-customer-password","email":"ci@example.test"}' \
+            http://127.0.0.1:3137/api/c/register | grep -q '"phone":"0551234567"'
+          order_json=$(curl -fsS -b /tmp/slimi-customer-cookies -H 'Content-Type: application/json' \
+            -d "{\"name\":\"Customer CI\",\"phone\":\"0551234567\",\"delivery\":\"pickup\",\"pay\":\"transfer\",\"items\":[{\"id\":\"$product_id\",\"q\":1}]}" \
+            http://127.0.0.1:3137/api/orders)
+          order_number=$(printf '%s' "$order_json" | node -pe 'JSON.parse(require("fs").readFileSync(0,"utf8")).number')
+          test -n "$order_number"
+          curl -fsS -b /tmp/slimi-customer-cookies http://127.0.0.1:3137/api/c/orders | grep -q "$order_number"
+          curl -fsS --get --data-urlencode "number=$order_number" --data-urlencode 'phone=0551234567' \
+            http://127.0.0.1:3137/api/track | grep -q '"status":"new"'
+          curl -fsS -b /tmp/slimi-cookies "http://127.0.0.1:3137/api/admin/orders?status=new" | grep -q "$order_number"
