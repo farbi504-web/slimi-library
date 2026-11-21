@@ -16,9 +16,7 @@ CREATE TABLE IF NOT EXISTS media(id TEXT PRIMARY KEY, mime TEXT NOT NULL, data B
 CREATE TABLE IF NOT EXISTS products(id TEXT PRIMARY KEY, cat TEXT NOT NULL, type TEXT NOT NULL, name_ar TEXT NOT NULL, name_fr TEXT NOT NULL, price INTEGER NOT NULL DEFAULT 0, old INTEGER NOT NULL DEFAULT 0, avail INTEGER NOT NULL DEFAULT 1, img TEXT NOT NULL DEFAULT '', sort INTEGER NOT NULL DEFAULT 0);
 CREATE TABLE IF NOT EXISTS orders(id INTEGER PRIMARY KEY, number TEXT UNIQUE NOT NULL, created INTEGER NOT NULL, status TEXT NOT NULL, pay_status TEXT NOT NULL, pay_method TEXT NOT NULL, delivery TEXT NOT NULL, name TEXT NOT NULL, phone TEXT NOT NULL, wilaya TEXT, addr TEXT, note TEXT, staff_note TEXT, items TEXT NOT NULL, subtotal INTEGER NOT NULL, fee INTEGER NOT NULL, total INTEGER NOT NULL, onreq INTEGER NOT NULL DEFAULT 0, has_phys INTEGER NOT NULL DEFAULT 0, has_dig INTEGER NOT NULL DEFAULT 0, lang TEXT, proof_mime TEXT, proof BLOB, proof_ts INTEGER);
 CREATE INDEX IF NOT EXISTS orders_created ON orders(created);
-CREATE INDEX IF NOT EXISTS orders_customer_id ON orders(customer_id);
 CREATE INDEX IF NOT EXISTS sessions_exp ON sessions(exp);
-CREATE INDEX IF NOT EXISTS csessions_exp ON csessions(exp);
 CREATE TABLE IF NOT EXISTS order_events(id INTEGER PRIMARY KEY, order_id INTEGER NOT NULL, ts INTEGER NOT NULL, kind TEXT NOT NULL, value TEXT, actor TEXT);
 CREATE TABLE IF NOT EXISTS subs(id INTEGER PRIMARY KEY, customer TEXT NOT NULL, phone TEXT, service TEXT NOT NULL, price INTEGER NOT NULL DEFAULT 0, start TEXT NOT NULL, end TEXT NOT NULL, note TEXT, order_number TEXT, created INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS audit(id INTEGER PRIMARY KEY, ts INTEGER NOT NULL, actor TEXT NOT NULL, action TEXT NOT NULL, detail TEXT);
@@ -30,6 +28,7 @@ addCol('products', 'needs_ref', 'INTEGER NOT NULL DEFAULT 0'); addCol('products'
 addCol('products', 'desc_ar', "TEXT DEFAULT ''"); addCol('products', 'desc_fr', "TEXT DEFAULT ''");
 addCol('orders', 'customer_id', 'INTEGER');
 db.exec('CREATE TABLE IF NOT EXISTS customers(id INTEGER PRIMARY KEY, phone TEXT UNIQUE NOT NULL, name TEXT NOT NULL, email TEXT DEFAULT "", salt TEXT NOT NULL, hash TEXT NOT NULL, created INTEGER NOT NULL); CREATE TABLE IF NOT EXISTS csessions(token TEXT PRIMARY KEY, cid INTEGER NOT NULL, exp INTEGER NOT NULL);');
+db.exec('CREATE INDEX IF NOT EXISTS orders_customer_id ON orders(customer_id); CREATE INDEX IF NOT EXISTS csessions_exp ON csessions(exp);');
 const GATEWAY_KEY = process.env.CHARGILY_SECRET_KEY || '';
 const GATEWAY_BASE = process.env.GATEWAY_BASE_URL || ((process.env.CHARGILY_MODE === 'live') ? 'https://pay.chargily.net/api/v2' : 'https://pay.chargily.net/test/api/v2');
 /* ---------- helpers ---------- */
