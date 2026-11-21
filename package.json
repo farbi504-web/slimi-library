@@ -4,6 +4,11 @@
   "private": true,
   "description": "Slimi Bookstore platform",
   "main": "server.js",
-  "scripts": { "start": "node --no-warnings server.js" },
-  "engines": { "node": ">=22.13" }
+  "scripts": {
+    "start": "node --no-warnings server.js",
+    "check": "node --check server.js"
+  },
+  "engines": {
+    "node": ">=22.13"
+  }
 }
