@@ -329,6 +329,7 @@ async function handle(req, res) {
     hit('prf:' + ip); const b = await readBody(req, 4e6);
     const o = row('SELECT * FROM orders WHERE number=?', str(b.number, 30).toUpperCase());
     if (!o || o.phone !== cleanPhone(b.phone)) return fail(res, 404, 'not_found');
+    if (o.pay_method !== 'transfer' || ['paid', 'refunded'].includes(o.pay_status) || o.status === 'cancelled') return fail(res, 409, 'proof_not_allowed');
     const buf = decodeFile(b, true, 2.5e6); if (!buf) return fail(res, 422, 'bad_file');
     run('UPDATE orders SET proof=?,proof_mime=?,proof_ts=?,pay_status=CASE WHEN pay_status=\'unpaid\' THEN \'proof_sent\' ELSE pay_status END WHERE id=?', buf, b.mime, now(), o.id);
     eventAdd(o.id, 'proof', 'uploaded', 'customer');
