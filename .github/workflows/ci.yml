@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  syntax:
+  syntax-and-smoke:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,3 +16,32 @@ jobs:
           node-version: '22'
       - name: Check server syntax
         run: npm run check
+      - name: Start app and smoke-test core routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          export OWNER_PASSWORD='ci-test-password-123'
+          export DATA_DIR="$(mktemp -d)"
+          export PORT=3137
+          node --no-warnings server.js > /tmp/slimi-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for attempt in {1..30}; do
+            if curl -fsS http://127.0.0.1:3137/health >/dev/null; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$ready" -ne 1 ]; then
+            cat /tmp/slimi-server.log
+            exit 1
+          fi
+          curl -fsS http://127.0.0.1:3137/api/catalog | grep -q '"products"'
+          curl -fsS http://127.0.0.1:3137/ >/dev/null
+          curl -fsS http://127.0.0.1:3137/admin >/dev/null
+          curl -fsS -c /tmp/slimi-cookies -H 'Content-Type: application/json' \
+            -d '{"username":"owner","password":"ci-test-password-123"}' \
+            http://127.0.0.1:3137/api/login | grep -q '"username":"owner"'
+          curl -fsS -b /tmp/slimi-cookies http://127.0.0.1:3137/api/admin/products | grep -q '\['
