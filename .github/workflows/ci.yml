@@ -65,6 +65,27 @@ jobs:
           curl -fsS -b /tmp/slimi-customer-cookies http://127.0.0.1:3137/api/c/orders | grep -q "$order_number"
           curl -fsS --get --data-urlencode "number=$order_number" --data-urlencode 'phone=0551234567' \
             http://127.0.0.1:3137/api/track | grep -q '"status":"new"'
+
+          # A valid transfer receipt is accepted, but a receipt cannot be attached to a paid order.
+          proof_json='{"number":"'"$order_number"'","phone":"0551234567","mime":"image/png","data":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/gT8AAAAASUVORK5CYII="}'
+          curl -fsS -H 'Content-Type: application/json' -d "$proof_json" http://127.0.0.1:3137/api/proof | grep -q '"ok":true'
+          curl -fsS --get --data-urlencode "number=$order_number" --data-urlencode 'phone=0551234567' \
+            http://127.0.0.1:3137/api/track | grep -q '"pay_status":"proof_sent"'
+          curl -fsS -b /tmp/slimi-cookies -X PATCH -H 'Content-Type: application/json' \
+            -d '{"pay_status":"paid"}' "http://127.0.0.1:3137/api/admin/orders/$order_id" >/dev/null
+          proof_paid_status=$(curl -sS -o /dev/null -w '%{http_code}' -H 'Content-Type: application/json' \
+            -d "$proof_json" http://127.0.0.1:3137/api/proof)
+          test "$proof_paid_status" = "409"
+
+          # Cash-on-delivery orders must never accept a bank-transfer receipt.
+          cod_json=$(curl -fsS -b /tmp/slimi-customer-cookies -H 'Content-Type: application/json' \
+            -d "{\"name\":\"Customer CI\",\"phone\":\"0551234567\",\"delivery\":\"pickup\",\"pay\":\"cod\",\"items\":[{\"id\":\"$product_id\",\"q\":1}]}" \
+            http://127.0.0.1:3137/api/orders)
+          cod_number=$(printf '%s' "$cod_json" | node -pe 'JSON.parse(require("fs").readFileSync(0,"utf8")).number')
+          cod_proof_status=$(curl -sS -o /dev/null -w '%{http_code}' -H 'Content-Type: application/json' \
+            -d '{"number":"'"$cod_number"'","phone":"0551234567","mime":"image/png","data":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/gT8AAAAASUVORK5CYII="}' \
+            http://127.0.0.1:3137/api/proof)
+          test "$cod_proof_status" = "409"
           curl -fsS -b /tmp/slimi-cookies "http://127.0.0.1:3137/api/admin/orders?status=new" | grep -q "$order_number"
           order_id=$(curl -fsS -b /tmp/slimi-cookies "http://127.0.0.1:3137/api/admin/orders?status=new" | node -pe 'JSON.parse(require("fs").readFileSync(0,"utf8"))[0].id')
           curl -fsS -b /tmp/slimi-cookies -X PATCH -H 'Content-Type: application/json' \
